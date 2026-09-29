@@ -1,6 +1,6 @@
 # Hardware Profile
 
-Run: e0-table-final. Raw samples: notes\e0-table-final/hardware.json. Units: MB in the GPU inventory are decimal labels reported by nvidia-smi; SSD MB/s below uses MiB (1048576 bytes) and is a single cached read, **not** a sustained SSD ceiling.
+Run: e0-execute-current. Raw samples: C:\Users\lahd2\OneDrive\Desktop\ai local\notes\e0-execute-current/hardware.json. Units: MB in the GPU inventory are decimal labels reported by nvidia-smi; SSD MB/s below uses MiB (1048576 bytes) and is a single cached read, **not** a sustained SSD ceiling.
 
 | Quantity | Observed value | Status |
 |---|---:|---|
@@ -15,8 +15,8 @@ Run: e0-table-final. Raw samples: notes\e0-table-final/hardware.json. Units: MB 
 | STREAM RAM bandwidth | — | unavailable: helper pending |
 | PCIe negotiated link | Gen 2 x8 | measured; this is not H2D throughput |
 | Pinned H2D/D2H bandwidth | — | unavailable: CUDA helper pending |
-| SSD sample read | 2482.58 MiB/s (67108864 byte cached sample) | measured, not a sustained ceiling |
-| SSD sample write | 1625.52 MiB/s (67108864 byte sample) | measured, not a sustained ceiling |
+| SSD sample read | 1573.16 MiB/s (67108864 byte cached sample) | measured, not a sustained ceiling |
+| SSD sample write | 967.58 MiB/s (67108864 byte sample) | measured, not a sustained ceiling |
 | OS | Microsoft Windows 11 Pro, build 26200 | measured |
 
 ## Status / Numbers / Next Experiment

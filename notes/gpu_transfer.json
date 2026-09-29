@@ -1,0 +1,232 @@
+{
+  "schema": "e0-gpu-transfer-v1",
+  "run_id": "E0-GPU-transfer-run1",
+  "timestamp_utc": "2026-09-29T16:24:37Z",
+  "script": "scripts/s10_cuda_transfer.py",
+  "hypothesis": "CUDA driver API copies should produce repeatable median bandwidth at 1, 16, and 64 MiB, with pinned transfers at least as fast as pageable transfers.",
+  "numeric_target": "3 sizes x 5 timed samples after 1 warmup for D2D, pinned/pageable H2D/D2H; numeric correctness true; otherwise explicit unavailable error.",
+  "platform": {
+    "python": "3.13.2",
+    "os": "Windows-11-10.0.26200-SP0"
+  },
+  "sizes_mib": [
+    1,
+    16,
+    64
+  ],
+  "samples": 5,
+  "warmups": 1,
+  "availability": "measured",
+  "inventory": [
+    {
+      "index": 0,
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_bytes": 4294443008,
+      "compute_capability": "8.6"
+    }
+  ],
+  "transfers": {
+    "1": {
+      "d2d": {
+        "status": "measured",
+        "samples_s": [
+          8.390005677938461e-05,
+          6.389990448951721e-05,
+          6.490014493465424e-05,
+          5.989987403154373e-05,
+          0.00012430036440491676
+        ],
+        "median_s": 6.490014493465424e-05,
+        "bandwidth_mib_s": 15408.28608328789,
+        "correct": true
+      },
+      "h2d_pinned": {
+        "status": "measured",
+        "samples_s": [
+          0.00014270003885030746,
+          0.00012190034613013268,
+          0.00011820020154118538,
+          0.000513200182467699,
+          0.0005367002449929714
+        ],
+        "median_s": 0.00014270003885030746,
+        "bandwidth_mib_s": 7007.70657146773,
+        "correct": true
+      },
+      "d2h_pinned": {
+        "status": "measured",
+        "samples_s": [
+          0.00014780042693018913,
+          0.00013559963554143906,
+          0.00013609975576400757,
+          0.00013779988512396812,
+          0.00013669999316334724
+        ],
+        "median_s": 0.00013669999316334724,
+        "bandwidth_mib_s": 7315.28931976659,
+        "correct": true
+      },
+      "h2d_pageable": {
+        "status": "measured",
+        "samples_s": [
+          0.00020859995856881142,
+          0.00015929993242025375,
+          0.0003217998892068863,
+          0.0005107000470161438,
+          0.00023040035739541054
+        ],
+        "median_s": 0.00023040035739541054,
+        "bandwidth_mib_s": 4340.271045169479,
+        "correct": true
+      },
+      "d2h_pageable": {
+        "status": "measured",
+        "samples_s": [
+          0.0005437997169792652,
+          0.0005025998689234257,
+          0.0002458002418279648,
+          0.0002454998902976513,
+          0.00024720001965761185
+        ],
+        "median_s": 0.00024720001965761185,
+        "bandwidth_mib_s": 4045.30712167849,
+        "correct": true
+      }
+    },
+    "16": {
+      "d2d": {
+        "status": "measured",
+        "samples_s": [
+          0.000264899805188179,
+          0.00024109985679388046,
+          0.00022109970450401306,
+          0.00021529989317059517,
+          0.00021529989317059517
+        ],
+        "median_s": 0.00022109970450401306,
+        "bandwidth_mib_s": 72365.54221495846,
+        "correct": true
+      },
+      "h2d_pinned": {
+        "status": "measured",
+        "samples_s": [
+          0.008599900174885988,
+          0.008078299928456545,
+          0.008110200054943562,
+          0.008848799858242273,
+          0.009305499959737062
+        ],
+        "median_s": 0.008599900174885988,
+        "bandwidth_mib_s": 1860.486712011412,
+        "correct": true
+      },
+      "d2h_pinned": {
+        "status": "measured",
+        "samples_s": [
+          0.007860200013965368,
+          0.007547600194811821,
+          0.00750730000436306,
+          0.007468499708920717,
+          0.007525700144469738
+        ],
+        "median_s": 0.007525700144469738,
+        "bandwidth_mib_s": 2126.0480344486755,
+        "correct": true
+      },
+      "h2d_pageable": {
+        "status": "measured",
+        "samples_s": [
+          0.009236700367182493,
+          0.009409499820321798,
+          0.008338300045579672,
+          0.007340500131249428,
+          0.009176400024443865
+        ],
+        "median_s": 0.009176400024443865,
+        "bandwidth_mib_s": 1743.6031512771458,
+        "correct": true
+      },
+      "d2h_pageable": {
+        "status": "measured",
+        "samples_s": [
+          0.008307600393891335,
+          0.008563899900764227,
+          0.008181000128388405,
+          0.00899200001731515,
+          0.00823929999023676
+        ],
+        "median_s": 0.008307600393891335,
+        "bandwidth_mib_s": 1925.9472340249981,
+        "correct": true
+      }
+    },
+    "64": {
+      "d2d": {
+        "status": "measured",
+        "samples_s": [
+          0.0009188000112771988,
+          0.0009717000648379326,
+          0.0009127999655902386,
+          0.0015775999054312706,
+          0.0009095999412238598
+        ],
+        "median_s": 0.0009188000112771988,
+        "bandwidth_mib_s": 69656.07228392972,
+        "correct": true
+      },
+      "h2d_pinned": {
+        "status": "measured",
+        "samples_s": [
+          0.034481399692595005,
+          0.018045099917799234,
+          0.008884100243449211,
+          0.008953200187534094,
+          0.009416299872100353
+        ],
+        "median_s": 0.009416299872100353,
+        "bandwidth_mib_s": 6796.724920541902,
+        "correct": true
+      },
+      "d2h_pinned": {
+        "status": "measured",
+        "samples_s": [
+          0.032994700130075216,
+          0.030584400054067373,
+          0.03194449981674552,
+          0.031336499843746424,
+          0.03149650013074279
+        ],
+        "median_s": 0.03149650013074279,
+        "bandwidth_mib_s": 2031.9717979564186,
+        "correct": true
+      },
+      "h2d_pageable": {
+        "status": "measured",
+        "samples_s": [
+          0.03491730010136962,
+          0.03546319995075464,
+          0.03550550015643239,
+          0.03406069986522198,
+          0.010392399970442057
+        ],
+        "median_s": 0.03491730010136962,
+        "bandwidth_mib_s": 1832.9023095771836,
+        "correct": true
+      },
+      "d2h_pageable": {
+        "status": "measured",
+        "samples_s": [
+          0.014305999968200922,
+          0.014422299806028605,
+          0.014672100078314543,
+          0.0158671997487545,
+          0.014436000026762486
+        ],
+        "median_s": 0.014436000026762486,
+        "bandwidth_mib_s": 4433.361033620964,
+        "correct": true
+      }
+    }
+  },
+  "errors": []
+}

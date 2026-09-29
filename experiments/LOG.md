@@ -99,3 +99,16 @@ Every run records hypothesis, target, command, model, quant, context, VRAM/RAM p
 - Numbers: 50 eval, 5 calibration, 4 images, 0 scored outputs, 0 measured quant tiers.
 - Next Experiment: First full-model stock reference output at context 2048 after pinned weights/runtime.
 
+## E0-GPU-TRANSFER-01/02 — 2026-09-29
+
+- Hypothesis/target before each run: CUDA driver API D2D and pageable/pinned H2D/D2H copies over 1, 16, 64 MiB will yield repeatable medians; target five samples after one warmup per case, numerical correctness true in all 15 cases. Run 2 specifically targeted stable identity and correctness with run-to-run variance exposed. One variable: repeat run ID/output path, same code and sizes.
+- Exact commands: `python scripts/s10_cuda_transfer.py --sizes-mib 1 16 64 --samples 5 --warmups 1 --output notes/gpu_transfer.json --run-id E0-GPU-transfer-run1`; `python scripts/s10_cuda_transfer.py --sizes-mib 1 16 64 --samples 5 --warmups 1 --output notes/gpu_transfer_run2.json --run-id E0-GPU-transfer-run2`.
+- Script: `scripts/s10_cuda_transfer.py`; source revision was uncommitted during runs and is now tracked by subsequent commit; raw JSON retains timestamps/samples. Model/quant/context, prefill/decode/quality and process RAM/VRAM peaks not applicable or unmeasured (copy microbenchmark).
+- Measured GPU device total 4,294,443,008 bytes, CC 8.6. All 15 cases per retained run numerically correct, zero API errors. At 16 MiB: run1 D2D 72,365.5 MiB/s, pinned H2D 1,860.5 MiB/s, pinned D2H 2,126.0 MiB/s; retained run2 D2D 69,084.5 MiB/s, H2D 1,841.6 MiB/s, D2H 2,072.0 MiB/s. At 1 MiB pinned H2D differs +35.6% between runs, at 64 MiB -15.1%. Full 1/16/64 MiB table and raw samples: `experiments/E0_gpu_transfer.md`, `notes/gpu_transfer.json`, `notes/gpu_transfer_run2.json`.
+- One additional concurrently invoked run2 reused the same output path and was overwritten; its printed medians are disclosed but excluded from reproducible comparisons. Route A: fixed AC/clocks and unique output paths; route B: event-timed CUDA benchmark or WSL2 separately labeled. Cheapest next experiment: third unique run with clocks and PCIe link recorded during transfer; expected variation bounded numerically or diagnosed.
+
+### Status / Numbers / Next Experiment
+- Status: Native CUDA transfer bandwidth measured; FFN GEMV and stable transfer-power envelope remain open.
+- Numbers: 2 retained runs × 15 correct cases; 16 MiB pinned H2D 1,860.5/1,841.6 MiB/s; D2D 72,365.5/69,084.5 MiB/s.
+- Next Experiment: Fixed-power uniquely named repeat; then FFN 17408×5120 GEMV/GEMM bandwidth test.
+

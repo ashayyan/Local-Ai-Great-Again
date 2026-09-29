@@ -5,6 +5,4 @@
 /experiments/e0_runs/*.json
 /quality/results/*.json
 /quality/quant_ladder/*.json
-
-scripts/cpu_stream/bin/
-scripts/cpu_stream/obj/
+/experiments/raw/stock/E0-STOCK-*.json

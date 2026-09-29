@@ -10,7 +10,7 @@ $requirements=@(
  @{name='model_manifest';script='s02_model_manifest.ps1';report='models/qwen3.8-27b-manifest.json'},
  @{name='stock_baseline';script='s03_stock_baseline.ps1';report='experiments/raw/stock/run.json'},
  @{name='quality_fixtures';script='s04_freeze_quality.ps1';report='quality/manifest.json'},
- @{name='quality_scoring';script='s05_score_quality.ps1';report='quality/reference/score.json'},
+ @{name='quality_scoring';script='s05_score_quality.ps1';report='quality/results/scores.json'},
  @{name='quant_ladder';script='s06_quant_ladder.ps1';report='quality/quant_ladder/ladder.json'}
 )
 $stages=@()
