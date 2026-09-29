@@ -1,0 +1,27 @@
+{
+    "ram_peak_bytes":  null,
+    "model_files":  0,
+    "context":  2048,
+    "timestamp_utc":  "2026-09-29T15:23:14.1699860Z",
+    "seed":  0,
+    "decode_tok_s":  null,
+    "model":  "models",
+    "schema":  "e0-stock-v1",
+    "quant":  "NVFP4 or available stock artifact",
+    "command":  "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/s03_stock_baseline.ps1 -Context 2048 -Seed 0 -OutputRoot experiments/raw/stock -ModelPath models -Runtime ",
+    "run_id":  "E0-STOCK-20260929-152314Z",
+    "hypothesis":  "Stock full-model reference produces coherent output at context 2048",
+    "quality_sample":  null,
+    "prefill_tok_s":  null,
+    "failure":  {
+                    "cheapest_next_experiment":  "Pin model revision and fetch metadata only, then check runtime architecture support",
+                    "routes":  [
+                                   "Fetch pinned checkpoint metadata/weights and use compatible stock runtime",
+                                   "Use supported GGUF partial offload reference if matching artifact is available"
+                               ],
+                    "exact_constraint":  "Local model files: 0; configured runtime: False"
+                },
+    "status":  "blocked-no-weights",
+    "vram_peak_bytes":  null,
+    "numeric_target":  "One deterministic output, measured prefill/decode and VRAM/RAM peaks"
+}

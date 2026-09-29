@@ -32,3 +32,20 @@ Every run records hypothesis, target, command, model, quant, context, VRAM/RAM p
 - Numbers: 0 files; 0 SHA-256 asset hashes; 8 missing components; 0 downloads; 0 runtime tests.
 - Next Experiment: Resolve exact SHA with `python -c "from huggingface_hub import HfApi; print(HfApi().model_info('Qwen/Qwen3.8-27B').sha)"`, download only metadata with the `snapshot_download` command in `notes/model_compatibility.md`, rerun manifest; expected measurable result is metadata hashes and config/index coverage with zero safetensors weights downloaded.
 
+## E0-STOCK-01 — PRE-REGISTERED (2026-09-29 UTC)
+
+- Hypothesis: an available pinned stock runtime and full Qwen3.8-27B weight artifact can produce finite text output at context 2048, while a missing prerequisite produces a structured JSON failure rather than a false speed/quality claim.
+- Numeric target: one text output at context 2048, seed 0, plus one multimodal attempt if a complete model/processor/runtime is present; capture VRAM/RAM peaks and prefill/decode tok/s or explicit null if no execution; zero large-weight downloads.
+- Only changed variable: stock runtime/model availability; no quant comparison, custom kernels, or model surgery.
+- Planned exact command: `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/s03_stock_baseline.ps1 -Context 2048 -Seed 0 -OutputRoot experiments/raw/stock`.
+- Model: Qwen/Qwen3.8-27B, local `models/` only; quant: auto-detect from local artifact, otherwise unavailable; no downloadable weights in this run.
+- Script: `scripts/s03_stock_baseline.ps1`; commit at pre-registration: `27cee1359c55a3b5f8c97baf472dc75b55156cfe` (script SHA recorded after implementation). This entry precedes first invocation and will be finalized with observed evidence.
+- Observed command: `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/s03_stock_baseline.ps1 -Context 2048 -Seed 0 -OutputRoot experiments/raw/stock`.
+- Result: `E0-STOCK-20260929-152314Z`, `blocked-no-weights`; 0 local weight files; model/quant unavailable; no prefill/decode, VRAM/RAM peaks, or quality sample because no inference occurred. JSON: `experiments/raw/stock/run.json`.
+- Exact constraint: 0 local model weights and no pinned runtime. Routes: (1) pinned NVFP4 + compatible runtime with CPU offload; (2) supported GGUF partial offload/CPU reference. Cheapest next experiment: fetch metadata at immutable source SHA, rerun `scripts/s02_model_manifest.ps1`, then test loader compatibility before weight download.
+
+### Status / Numbers / Next Experiment
+- Status: Stock baseline attempted and blocked by missing local model/runtime; failure is logged, not treated as performance data.
+- Numbers: 0 model weight files; context 2048; prefill/decode/VRAM/RAM/quality unmeasured.
+- Next Experiment: Resolve immutable checkpoint SHA and metadata-only download, then pin compatible stock runtime.
+
