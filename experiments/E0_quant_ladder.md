@@ -8,6 +8,6 @@
 
 ## Status / Numbers / Next Experiment
 
-- **Status:** 50 text prompts frozen as an initial fixture; no checkpoint is locally available and no quant tier has been run. Image fixtures, calibration samples, and reference outputs remain pending.
-- **Numbers:** 50 text prompts; 0 measured quant levels; quality/VRAM/RAM/prefill/decode unmeasured.
-- **Next Experiment:** Pin model and runtime revisions, acquire source metadata, then run the stock Q4/NVFP4 baseline before changing quant tier one variable at a time.
+- **Status:** 50 text prompts, 5 disjoint calibration prompts, and four SVG image fixtures are hashed in `quality/manifest.json`. No weight checkpoint is locally available and no quant tier has been run. Reference outputs and full-model scoring remain pending.
+- **Numbers:** 50 evaluation prompts; 5 calibration prompts; 4 image fixture categories; 0 measured quant tiers; quality/VRAM/RAM/prefill/decode unmeasured. `quality/quant_ladder/ladder.json` records all 3 tiers as unavailable.
+- **Next Experiment:** Acquire pinned stock weights/runtime at source revision `1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0` or a pinned quant source, measure Q4/NVFP4 reference at context 2048, then vary only quant tier in separate runs.

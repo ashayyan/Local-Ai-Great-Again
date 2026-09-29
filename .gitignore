@@ -1,2 +1,10 @@
 # Local model weights and generated artifact manifests (never commit).
 /models/
+/scripts/cpu_stream/bin/
+/scripts/cpu_stream/obj/
+/experiments/e0_runs/*.json
+/quality/results/*.json
+/quality/quant_ladder/*.json
+
+scripts/cpu_stream/bin/
+scripts/cpu_stream/obj/

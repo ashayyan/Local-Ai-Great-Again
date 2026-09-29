@@ -3,10 +3,10 @@
 **Status:** Partial fixture preparation only; model-dependent work not executed.
 
 - Froze 50 initial text prompts and a manifest with disjoint calibration/evaluation identifiers.
-- Listed four required multimodal categories but did not create image fixtures or claim visual quality.
-- Created an explicit unmeasured stock quant ladder report.
+- Added five genuinely disjoint calibration prompts and four hashed deterministic SVG image fixtures for OCR/charts/spatial/multistep; visual model behavior remains unmeasured.
+- Implemented `scripts/s04_freeze_quality.ps1`, `scripts/s05_score_quality.ps1`, and `scripts/s06_quant_ladder.ps1`, which report unmeasured PPL and three unavailable quant tiers rather than fabricated quality numbers.
 
 ## Status / Numbers / Next Experiment
-- **Status:** 50-prompt fixture exists; scoring/quant comparisons remain open.
-- **Numbers:** 50 text prompts; 0 model outputs, 0 image fixtures, 0 quant tiers benchmarked.
-- **Next Experiment:** Pin model/tokenizer/processor revision, add disjoint calibration and image fixtures, and measure the first stock reference before lower-bit comparisons.
+- **Status:** Fixture and availability harnesses run; semantic scoring/quant comparisons remain open.
+- **Numbers:** 50 evaluation prompts, 5 calibration prompts, 4 SVG image fixtures, 0 model outputs, 0 quant tiers benchmarked.
+- **Next Experiment:** Pin model/tokenizer/processor assets and compatible stock runtime, then measure the first reference before lower-bit comparisons.

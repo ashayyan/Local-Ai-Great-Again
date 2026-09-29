@@ -75,3 +75,27 @@ Every run records hypothesis, target, command, model, quant, context, VRAM/RAM p
 - Numbers: 7 files, 1,199 tensors, 18 missing shards, 64/48/16 layers, 27 vision layers, 1 MTP layer.
 - Next Experiment: Fetch tokenizer and image processor metadata; test stock loader architecture support, then acquire weights.
 
+## E0-CPU-STREAM-01 — 2026-09-29
+
+- Hypothesis + target stated before run: Release .NET 8 managed Triad on 3 × 256 MiB arrays, 2 warmups, 7 measured repetitions achieves median >=10,000 MiB/s; checksum prevents dead-code removal.
+- Exact command: `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/s09_cpu_stream.ps1 -Warmup 2 -Repetitions 7 -MiB 256 -OutputJson notes/cpu_stream.json`. Code: `scripts/cpu_stream/Program.cs` and `scripts/cpu_stream/CpuStream.csproj`. Starting commit `6c47565c4c26000da949d9c3d09e2ac2b086d44b`; .NET 8.0.15 runtime, 9.0.203 SDK. One variable: benchmark memory-operation selection, no model inference. Model/quant/context/prefill/decode/quality/VRAM peak not applicable; RAM allocation from three arrays is 805,306,368 bytes plus runtime overhead (process peak not measured).
+- Raw MiB/s: 9660.425964, 11516.919224, 11826.374046, 11978.009124, 12345.619475, 12473.809872, 12485.409304; median **11978.009 MiB/s = 12.56 GB/s decimal**; checksum 21. Raw JSON `notes/cpu_stream.json`. This is one-thread warm-cache Triad, not a multicore DRAM ceiling.
+- Constraint/routes: multicore achievable RAM bandwidth still unknown. Routes: (1) pinned multithread STREAM benchmark sweeping array sizes, (2) native C/C++ STREAM build with validated vectorization. Cheapest next experiment: run pinned 1/2/4/6-thread Triad over 3 × 256 MiB arrays, compare medians under fixed AC and clocks.
+
+### Status / Numbers / Next Experiment
+- Status: One single-thread STREAM-like Triad measured; multicore bandwidth gate open.
+- Numbers: 7 samples, median 11978.009 MiB/s, 3 × 256 MiB arrays, 2 warmups.
+- Next Experiment: Multithread STREAM-equivalent sweep with process RAM peak and thermal telemetry.
+
+## E0-QUALITY-FIXTURE-01 — 2026-09-29
+
+- Hypothesis/target before validation: a fixed 50-prompt evaluation set, 5 disjoint calibration prompts and four deterministic SVG image categories can be hashed without model outputs; target 50/5/4 and zero fabricated quality metrics. Variable: fixture completeness only.
+- Commands: `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/s04_freeze_quality.ps1 -OutputRoot quality`; `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/s05_score_quality.ps1`; `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/s06_quant_ladder.ps1`. Model/quant/context: no checkpoint, 3 quant tiers listed at context 2048; VRAM/RAM peaks/prefill/decode/quality unmeasured, PPL explicitly unavailable.
+- Results: 50 eval, 5 calibration, 4 SVG fixtures hashed; score outputs 0/50, all 3 quant tiers unavailable due 0 matching local weight artifacts. Machine records `quality/manifest.json`, `quality/results/scores.json`, `quality/quant_ladder/ladder.json`.
+- Constraint/routes: 18 source shards absent and no compatible stock runtime; (1) pin/download full NVFP4 and use correct loader, (2) pin compatible GGUF/offload baseline. Cheapest next experiment: inspect tokenizer and processor metadata at immutable SHA, then test stock loader support.
+
+### Status / Numbers / Next Experiment
+- Status: Fixture freeze validated; semantic quality and quant ladder gates open.
+- Numbers: 50 eval, 5 calibration, 4 images, 0 scored outputs, 0 measured quant tiers.
+- Next Experiment: First full-model stock reference output at context 2048 after pinned weights/runtime.
+

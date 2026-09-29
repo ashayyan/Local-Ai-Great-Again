@@ -1,0 +1,27 @@
+﻿[
+    {
+        "id":  "cal-001",
+        "prompt":  "Given bytes=1572864 and unit=MiB, compute the exact byte count and state the arithmetic.",
+        "category":  "numeric"
+    },
+    {
+        "id":  "cal-002",
+        "prompt":  "Design a two-condition benchmark table that changes only quantization while holding runtime and context fixed.",
+        "category":  "methodology"
+    },
+    {
+        "id":  "cal-003",
+        "prompt":  "Return a JSON object with keys hypothesis, observed, and next_experiment; use null for an unmeasured observed value.",
+        "category":  "structured"
+    },
+    {
+        "id":  "cal-004",
+        "prompt":  "A run reports 4 GiB VRAM and 55.6 GB of FP16 weights. Calculate the approximate decimal storage gap and name two measurement routes.",
+        "category":  "resource"
+    },
+    {
+        "id":  "cal-005",
+        "prompt":  "Explain in three ordered steps how a SHA-256 digest makes a fixture reproducible without proving model quality.",
+        "category":  "provenance"
+    }
+]
