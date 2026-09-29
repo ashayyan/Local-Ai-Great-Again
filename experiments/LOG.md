@@ -169,3 +169,15 @@ Every run records hypothesis, target, command, model, quant, context, VRAM/RAM p
 - Numbers: 17 GiB read 945.51 MiB/s; write 156.46 MiB/s; 0 valid PCIe latency samples.
 - Next Experiment: Correct 10 KiB pinned H2D/D2H helper and rerun; repeat SSD with cache policy recorded.
 
+## E0-BASELINE-SELECTION-01 — 2026-09-29
+
+- Pre-registration: select a local baseline under measured 16 GiB RAM / 4,096 MiB VRAM, without downloading weights until runtime support and resource envelope are documented. Target: primary IQ3_S plus two fallbacks, Q4 explicitly classified by bytes, and exact runtime/toolchain availability.
+- Exact metadata-only inspection is documented in `experiments/E0_baseline_selection.md` and `notes/baseline_selection.json`; no weights downloaded. Unsloth listings: IQ3_S 12,040,883,104 bytes (~12.0 GB), IQ3_XXS 10,934,860,704 (~10.9 GB), IQ2_XXS 7,266,070,528 (~7.3 GB). Q4 family 15.4–17.6 GB is `unavailable-resource` before OS/KV/projector overhead.
+- Runtime result: no llama.cpp checkout/binary; cmake, compilers, nvcc and build helpers absent. Qwen3.5/GDN, vision and MTP support are unverified. No stock reference run was attempted because no pinned runtime or local weight artifact exists.
+- Routes: (1) obtain a pinned Windows CUDA llama.cpp binary/build with qwen35 + MTP support and run IQ3_S at context 2048; (2) use a pinned CPU/RAM/SSD streaming fork and fall back IQ3_XXS/IQ2_XXS. Cheapest next experiment: acquire a verified runtime binary/source hash without weights, run `--help`/architecture capability checks, then download only IQ3_S if support passes.
+
+### Status / Numbers / Next Experiment
+- Status: Baseline artifact selection complete; stock inference gate remains open.
+- Numbers: IQ3_S 12.0 GB, IQ3_XXS 10.9 GB, IQ2_XXS 7.3 GB, Q4 15.4–17.6 GB resource-blocked, 0 weights downloaded, 0 stock outputs.
+- Next Experiment: Pin llama.cpp build/version and test qwen35/MTP capability before IQ3_S acquisition.
+
