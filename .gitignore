@@ -2,6 +2,8 @@
 /models/
 /scripts/cpu_stream/bin/
 /scripts/cpu_stream/obj/
+/scripts/__pycache__/
+/runtimes/llama.cpp-release/
 /experiments/e0_runs/*.json
 /quality/results/*.json
 /quality/quant_ladder/*.json
