@@ -15,7 +15,7 @@ progress:
 
 **State:** Planning complete; execution not started.
 **Mode:** MVP mode.
-**Current stage:** E0 Phase 0.1 — hardware truth and environment capture.
+**Current stage:** Phase 1 / E0 — hardware truth, baseline, and environment capture.
 **Strict sequence:** E0 → E1 → E2 → E3 → E4.
 **Last transition:** Roadmap and state drafted from project requirements and research set.
 
@@ -59,5 +59,5 @@ Run the pinned hardware probe (GPU identity/SM/VRAM, driver/CUDA/toolchain, CPU/
 ## Session
 
 **Last session:** 2026-09-29T14:33:25.819Z
-**Stopped at:** Phase 0.1 context gathered
-**Resume file:** .planning/phases/0.1-hardware-truth/0.1-CONTEXT.md
+**Stopped at:** Phase 1 context gathered
+**Resume file:** .planning/phases/01-e0-baseline/01-CONTEXT.md

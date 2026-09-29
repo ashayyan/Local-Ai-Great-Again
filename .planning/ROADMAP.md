@@ -7,32 +7,46 @@
 
 ## Phase map
 
+The installed GSD phase resolver accepts integer phase identifiers. The former decimal experiment slices are preserved as plan/task boundaries inside these integer phases.
+
 | Phase | Stage | MVP deliverable | Requirement IDs (exactly once) | Advance gate / conditional fork |
 |---|---|---|---|---|
-| 0.1 | E0 | Reproducible hardware and environment report | REQ-E0-01, REQ-E0-02, REQ-LOG-01 | Identity and bandwidth rerun; if native tooling fails, fork to WSL2 while preserving the same probe schema. |
-| 0.2 | E0 | Immutable complete-model manifest and compatibility report | REQ-E0-03 | Config, tokenizer, GDN/attention, vision, MTP and untied head are classified; unsupported components trigger loader/fixture fallback, not silent omission. |
-| 0.3 | E0 | Deterministic stock/reference text and multimodal smoke path | REQ-E0-04 | A coherent context≥2048 sample and explicit text-only vs complete multimodal status are recorded; loader/resource failures get two routes and a cheapest test. |
-| 0.4 | E0 | Frozen quality fixtures and stock quantization ladder | REQ-E0-05, REQ-E0-06 | Baseline table and hashed 50-prompt/multimodal reference exist before E1; unsupported quant levels are evidence-backed. |
-| 0.5 | E0 | Fresh-checkout run regeneration contract | REQ-LOG-02, REQ-LOG-03 | Machine-readable logs and numbered scripts reproduce the headline E0 table without hand-edited paths. |
-| 1.1 | E1 | Matched ternary/base offline agreement harness | REQ-E1-01 | 200 held-out prompts, greedy/k=4, alpha and stratified errors are reported against the frozen verifier. |
-| 1.2 | E1 | Authoritative verifier and recurrent-state correctness | REQ-E1-02 | Rejection/verifier outputs match seeded full-model behavior; tokenizer, RNG, GDN/KV reset tests pass. |
-| 1.3 | E1 | Agreement decision and route-fork record | REQ-E1-03, REQ-E1-04 | k=4 α≥0.6 promotes T1; α<0.4 forces layer-wise healing/remeasurement; intermediate α gets comparison; three failures fork or record dormant trigger. |
-| 2.1 | E2 | sm_86 representative kernel correctness/performance probes | REQ-E2-01 | Exact FFN/GDN/attention/head shapes at M=1,4,8,16 have numerical error, timing and bandwidth evidence; unsupported formats remain marked. |
-| 2.2 | E2 | AVX2 CPU split and transfer accounting | REQ-E2-02 | Scalar-correct CPU baseline, STREAM comparison, hidden-state-only pinned transfer and overlap are measured; 70% STREAM remains a target, not an assumption. |
-| 2.3 | E2 | Placement, paging and stock-offload comparison | REQ-E2-03 | Stock partial offload precedes custom hot/warm/cold paging; page traces, state residency and cold/warm decode are recorded. |
-| 2.4 | E2 | Kernel/route promotion decision | REQ-E2-04 | Numerical tolerance, quality and repeatable end-to-end improvement are all demonstrated or route is forked/dormant with trigger. |
-| 3.1 | E3 | Native activation sparsity measurement | REQ-E3-01 | ≥1,000 representative tokens yield layer/neuron/category distributions, top-k mass and inactive fraction before exploitation. |
-| 3.2 | E3 | Controlled sparse placement/paging candidates | REQ-E3-02 | Static hot/cold, activation-aware paging and structured sparsity are compared on fixed quality suite with bytes/page/traffic/adversarial evidence. |
-| 3.3 | E3 | Sparsity decision and fallback | REQ-E3-03 | Promote only measured byte/time reduction within quality delta; otherwise retain statistics and fork to mixed precision or memory-tier tuning. |
-| 4.1 | E4 | Native visual prefill and unpruned reference | REQ-E4-01 | Native processor/tower run records visual tokens, latency, VRAM and category quality before pruning. |
-| 4.2 | E4 | Verified vision eviction and state preservation | REQ-E4-02 | Synchronization, allocator and free-memory telemetry demonstrate recovered usable VRAM while embeddings and GDN/KV state survive. |
-| 4.3 | E4 | Pruning/recovery comparison and multimodal decision | REQ-E4-03 | No-prune, dynamic pruning and recovery fallback are compared per category; task-critical losses reject or fork pruning. |
-| 4.4 | E4 | Full-model quality and interactive performance acceptance | REQ-GATE-01, REQ-GATE-02 | Complete model remains authoritative at context≥2048; fixed text/image quality and separate TTFT/prefill/decode/memory metrics meet declared targets or are numerically reported as unresolved. |
-| 4.5 | E4 | E0→E4 decision table and clean-checkout closure | REQ-GATE-03 | Every gate has artifact hashes, evidence, pass/fork/dormant decision, constraint, two routes, revisit trigger and next command; no completion claim hides unresolved gates. |
+| 1 | E0 | Hardware truth, environment report, model manifest, baseline, fixtures, and reproduction contract | REQ-E0-01–06, REQ-LOG-01–03 | Complete E0 evidence before E1; native failures fork to WSL2 or another labeled route without mixing measurements. |
+| 2 | E1 | Ternary/base agreement harness, authoritative verifier checks, and route-fork record | REQ-E1-01–04 | k=4 α≥0.6 promotes T1; α<0.4 requires healing and remeasurement; three failures require a fork/dormant trigger. |
+| 3 | E2 | sm_86 kernels, AVX2 split, transfer accounting, placement/paging, and promotion decision | REQ-E2-01–04 | Numerical correctness, quality, and repeatable end-to-end improvement must be measured. |
+| 4 | E3 | Native activation evidence, controlled sparse candidates, and sparsity decision | REQ-E3-01–03 | Natural sparsity precedes exploitation; failed quality/speed gates fork to mixed precision or memory tiers. |
+| 5 | E4 | Visual prefill, eviction, pruning/recovery, acceptance, and closure record | REQ-E4-01–03, REQ-GATE-01–03 | Full-model text/image quality, performance, and clean-checkout evidence are explicit before closure. |
 
 ## Phase details and observable success criteria
 
-### Phase 0.1 — Hardware truth (E0)
+### Phase 1: Hardware truth, baseline, and reproduction (E0)
+
+**Former experiment slices:** 0.1 hardware truth; 0.2 model artifact correctness; 0.3 stock/reference path; 0.4 frozen quality and quant ladder; 0.5 reproduction contract.
+
+**MVP mode:** Deliver the complete E0 evidence package before any E1 work.
+- Hardware and environment measurements are rerunnable with raw JSON and generated Markdown.
+- Complete model artifacts and compatibility are classified.
+- Stock/reference output, quality fixtures, quantization ladder, and clean-checkout regeneration are recorded.
+
+### Phase 2: Agreement and verification (E1)
+
+**Former experiment slices:** 1.1 agreement; 1.2 authoritative verification; 1.3 decision/forks.
+
+### Phase 3: Kernels and memory tiers (E2)
+
+**Former experiment slices:** 2.1 kernel probes; 2.2 CPU/GPU split; 2.3 placement/paging; 2.4 promotion.
+
+### Phase 4: Activation sparsity (E3)
+
+**Former experiment slices:** 3.1 activation evidence; 3.2 controlled sparsity; 3.3 decision/fallback.
+
+### Phase 5: Multimodal closure (E4)
+
+**Former experiment slices:** 4.1 visual prefill; 4.2 eviction; 4.3 pruning/recovery; 4.4 acceptance; 4.5 closure record.
+
+## Detailed criteria (preserved from former slices)
+
+### Phase 1 detail — Hardware truth (former 0.1)
 **MVP mode:** one probe script, one rerun, one machine report.
 - JSON/text report contains GPU SKU/VRAM/SM, driver/CUDA/toolchain, CPU/SIMD, RAM, SSD, PCIe, clocks/power and timestamp.
 - Device, RAM, transfer, SSD and available-memory probes report units, repetitions, medians and thermal/power context.
