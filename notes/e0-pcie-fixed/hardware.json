@@ -20,21 +20,21 @@
     "disk":  {
                  "value":  {
                                "Name":  "C",
-                               "Used":  302641319936,
-                               "Free":  207873630208,
+                               "Used":  302640951296,
+                               "Free":  207873998848,
                                "Root":  "C:\\"
                            },
                  "status":  "measured"
              },
     "ssd":  {
                 "value":  {
-                              "write_mb_s":  1625.5165459805294,
-                              "read_mb_s":  2482.5831277444181,
+                              "write_mb_s":  1769.7255266316042,
+                              "read_mb_s":  3091.3842155854072,
                               "bytes":  67108864
                           },
                 "status":  "measured"
             },
-    "timestamp_utc":  "2026-09-29T15:29:40.8400172Z",
+    "timestamp_utc":  "2026-09-29T15:28:30.3567910Z",
     "gpu_bandwidth":  {
                           "status":  "unavailable",
                           "note":  "CUDA copy/GEMV helper not present in this run"
@@ -44,7 +44,7 @@
                       "power_source":  2,
                       "status":  "measured"
                   },
-    "run_id":  "e0-table-final",
+    "run_id":  "e0-pcie-fixed",
     "hypothesis":  "Windows-native probe identifies actual laptop limits with repeatable medians",
     "availability":  {
                          "cuda_bandwidth":  false,
@@ -67,14 +67,14 @@
                 "value":  {
                               "vram_total":  "4096",
                               "compute_capability":  "8.6",
-                              "graphics_clock_mhz":  "622",
+                              "graphics_clock_mhz":  "517",
                               "power_limit_w":  "[N/A]",
                               "memory_clock_mhz":  "810",
                               "temperature_c":  "54",
                               "driver":  "610.62",
                               "name":  "NVIDIA GeForce RTX 3050 Laptop GPU",
                               "uuid":  "GPU-61921ed7-a1ff-7f09-f4ba-50985e3365c5",
-                              "vram_free":  "3825"
+                              "vram_free":  "3824"
                           },
                 "status":  "measured"
             },

@@ -16,6 +16,19 @@ Every run records hypothesis, target, command, model, quant, context, VRAM/RAM p
 - Numbers: 4 GB VRAM; SM 8.6; 16 GB RAM; 6C/12T CPU; SSD sample 60.13 write / 138.83 read MB/s; GPU/CPU bandwidth and PCIe application throughput unmeasured.
 - Next Experiment: Run supported PCIe inventory and pinned H2D/D2H plus FFN GEMV/GEMM and STREAM helpers; update profile without overwriting prior run artifacts.
 
+## E0-HW e0-table-final — 2026-09-29
+
+- Hypothesis/target before run: supported PCIe query returns numeric generation and width; 64 MiB SSD temp-file read/write is captured separately from 1 MiB. Target: nonempty generation/width and timings without a parse error.
+- Exact command: `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/s01_hardware_probe.ps1 -RunId e0-table-final -OutputRoot notes -Warmups 1 -Samples 2 -SsdTestBytes 67108864`.
+- Script blob hash `3113b50f2f0c3c2fd1c49dd54ddcd3cc0a8a9cc6`; parent commit `bcefebe18a975864ec4671e8b16c455e98c23ae3`. Model/quant/context/VRAM and RAM peaks/prefill/decode/quality: not applicable or unmeasured in inventory-only run.
+- Result: 4096 MiB VRAM, 16 GiB installed RAM, negotiated PCIe Gen 2 x8 at idle; 64 MiB SSD timing is cached and not a sustained ceiling. Raw JSON `notes/e0-table-final/hardware.json`. GPU copy/GEMV, CPU STREAM, and pinned H2D/D2H remain unmeasured.
+- Exact constraint: CUDA compiler and working PyTorch CUDA runtime absent; WSL is not installed. Routes: (1) native CUDA toolkit/benchmark helper; (2) install/configure separately labeled WSL2 CUDA route. Cheapest next experiment: native pinned H2D/D2H sweep with 1/16/256 MiB buffers, expected GB/s and latency or toolchain error.
+
+### Status / Numbers / Next Experiment
+- Status: Corrected PCIe inventory; bandwidth gates open.
+- Numbers: PCIe idle Gen 2 x8; 4 GiB VRAM; 16 GiB RAM; achieved PCIe GB/s unknown.
+- Next Experiment: Compile/run CUDA pinned transfer microbenchmark while recording active link state.
+
 ## E0-MANIFEST-01 — 2026-09-29 UTC (offline artifact inventory)
 
 - Hypothesis (pre-run): the available local `models/` directory can be classified without loading weights, and missing architecture/loader evidence is explicitly represented.

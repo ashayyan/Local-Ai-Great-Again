@@ -20,21 +20,21 @@
     "disk":  {
                  "value":  {
                                "Name":  "C",
-                               "Used":  302641319936,
-                               "Free":  207873630208,
+                               "Used":  302641156096,
+                               "Free":  207873794048,
                                "Root":  "C:\\"
                            },
                  "status":  "measured"
              },
     "ssd":  {
                 "value":  {
-                              "write_mb_s":  1625.5165459805294,
-                              "read_mb_s":  2482.5831277444181,
+                              "write_mb_s":  1820.5298879805202,
+                              "read_mb_s":  2875.9004039741349,
                               "bytes":  67108864
                           },
                 "status":  "measured"
             },
-    "timestamp_utc":  "2026-09-29T15:29:40.8400172Z",
+    "timestamp_utc":  "2026-09-29T15:29:22.9595566Z",
     "gpu_bandwidth":  {
                           "status":  "unavailable",
                           "note":  "CUDA copy/GEMV helper not present in this run"
@@ -44,7 +44,7 @@
                       "power_source":  2,
                       "status":  "measured"
                   },
-    "run_id":  "e0-table-final",
+    "run_id":  "e0-table-check",
     "hypothesis":  "Windows-native probe identifies actual laptop limits with repeatable medians",
     "availability":  {
                          "cuda_bandwidth":  false,
@@ -67,7 +67,7 @@
                 "value":  {
                               "vram_total":  "4096",
                               "compute_capability":  "8.6",
-                              "graphics_clock_mhz":  "622",
+                              "graphics_clock_mhz":  "600",
                               "power_limit_w":  "[N/A]",
                               "memory_clock_mhz":  "810",
                               "temperature_c":  "54",

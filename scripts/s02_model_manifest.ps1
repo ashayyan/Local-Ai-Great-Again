@@ -49,8 +49,8 @@ $architecture = [ordered]@{
     tie_word_embeddings = Field $config 'tie_word_embeddings'
     layer_types = $layerTypes; gdn_layer_count = if ($layerTypes.Count) { $gdnCount } else { $null }
     full_attention_layer_count = if ($layerTypes.Count) { $fullCount } else { $null }
-    vision_num_hidden_layers = Field $vision 'num_hidden_layers'
-    num_nextn_predict_layers = Field $text 'num_nextn_predict_layers'
+    vision_num_hidden_layers = if ($null -ne (Field $vision 'depth')) { Field $vision 'depth' } else { Field $vision 'num_hidden_layers' }
+    num_nextn_predict_layers = if ($null -ne (Field $text 'mtp_num_hidden_layers')) { Field $text 'mtp_num_hidden_layers' } else { Field $text 'num_nextn_predict_layers' }
 }
 # A named file is evidence of an artifact, not evidence of correct tensors or runtime support.
 $weights = @($files | Where-Object { $_.kind -in @('safetensors','GGUF') })
