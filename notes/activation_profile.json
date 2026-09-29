@@ -1,0 +1,57 @@
+{
+  "schema": "e3.1-activation-profile-v1",
+  "timestamp_utc": "2026-09-29T17:33:54Z",
+  "script": "scripts/s16_activation_profile.py",
+  "status": "unavailable",
+  "hypothesis": "Native SiLU/SwiGLU activations have category-dependent magnitude tails and inactive fractions that can guide E3.1 sparsity routes.",
+  "target": {
+    "minimum_tokens": 1000,
+    "categories": [
+      "instruction",
+      "code",
+      "reasoning",
+      "factual"
+    ],
+    "metrics": [
+      "count",
+      "mean_abs",
+      "p50_abs",
+      "p90_abs",
+      "p99_abs",
+      "max_abs",
+      "top_k_abs_mass",
+      "inactive_fraction"
+    ]
+  },
+  "pre_registration": {
+    "command": "python scripts/s16_activation_profile.py --model <LOCAL_MODEL> --tokenizer <LOCAL_TOKENIZER> --output notes/activation_profile.json",
+    "routes": [
+      "free local Transformers/PyTorch run with --model/--tokenizer",
+      "borrowed compute rerun with the same command and artifact schema",
+      "if native hooks are unsupported, add an architecture-specific hook adapter without changing thresholds"
+    ],
+    "status": "pre-registered"
+  },
+  "model": null,
+  "tokenizer": null,
+  "runtime": {
+    "python": "3.13.2",
+    "os": "Windows-11-10.0.26200-SP0"
+  },
+  "tokens": {
+    "required": 1000,
+    "observed": 0
+  },
+  "categories": {},
+  "layers": {},
+  "blockers": [
+    {
+      "kind": "model",
+      "message": "local model absent: no --model supplied and models/ contains no directory with config.json"
+    },
+    {
+      "kind": "tokenizer",
+      "message": "local tokenizer absent: supply --tokenizer or a model directory containing tokenizer files"
+    }
+  ]
+}

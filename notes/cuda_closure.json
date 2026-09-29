@@ -1,0 +1,168 @@
+{
+  "schema": "e0-cuda-closure-v1",
+  "timestamp_utc": "2026-09-29T17:31:55Z",
+  "script": "scripts/s15_cuda_closure.py",
+  "command": "python scripts/s15_cuda_closure.py",
+  "hypothesis": "Dedicated D2D copies at 256/512 MiB and valid pinned 10 KiB copies expose measured bandwidth and per-hop latency.",
+  "numeric_target": "D2D 256/512 MiB: 1 warmup + 7 samples each, whole-buffer correctness; 10 KiB pinned H2D/D2H and round trip: 20 samples each, all correct; exact CUDA errors if unavailable.",
+  "platform": {
+    "python": "3.13.2",
+    "os": "Windows-11-10.0.26200-SP0"
+  },
+  "timing": "perf_counter_ns around synchronous driver call + cuCtxSynchronize; separate operations for individual H2D and D2H; round trip includes two calls and one synchronize",
+  "device": {
+    "index": 0,
+    "name": "NVIDIA GeForce RTX 3050 Laptop GPU"
+  },
+  "d2d": {
+    "256": {
+      "status": "measured",
+      "bytes": 268435456,
+      "samples": 7,
+      "warmups": 1,
+      "correct": true,
+      "correctness_scope": "all destination bytes after final sample",
+      "samples_us": [
+        2943.5,
+        3509.7,
+        2943.1,
+        2939.0,
+        3519.2,
+        2933.0,
+        3508.2
+      ],
+      "median_us": 2943.5,
+      "min_us": 2933.0,
+      "max_us": 3519.2,
+      "spread_us": 586.1999999999998,
+      "spread_definition": "max - min",
+      "bandwidth_mib_s": 86971.29267878376
+    },
+    "512": {
+      "status": "measured",
+      "bytes": 536870912,
+      "samples": 7,
+      "warmups": 1,
+      "correct": true,
+      "correctness_scope": "all destination bytes after final sample",
+      "samples_us": [
+        6419.5,
+        6479.2,
+        6483.4,
+        6427.3,
+        6445.6,
+        6469.1,
+        6429.5
+      ],
+      "median_us": 6445.6,
+      "min_us": 6419.5,
+      "max_us": 6483.4,
+      "spread_us": 63.899999999999636,
+      "spread_definition": "max - min",
+      "bandwidth_mib_s": 79434.03251830707
+    }
+  },
+  "pinned_10kib": {
+    "status": "measured",
+    "bytes": 10240,
+    "samples": 20,
+    "warmups_per_direction": 1,
+    "correct": true,
+    "correctness_scope": "all 10240 bytes checked after each D2H and round trip",
+    "h2d": {
+      "samples_us": [
+        46.7,
+        11.7,
+        13.9,
+        17.1,
+        11.8,
+        15.2,
+        24.3,
+        15.0,
+        16.9,
+        11.7,
+        11.9,
+        13.6,
+        18.4,
+        19.7,
+        15.1,
+        13.8,
+        11.4,
+        10.7,
+        10.8,
+        10.9
+      ],
+      "median_us": 13.850000000000001,
+      "min_us": 10.7,
+      "max_us": 46.7,
+      "spread_us": 36.0,
+      "spread_definition": "max - min",
+      "bandwidth_mib_s": 705.0992779783393
+    },
+    "d2h": {
+      "samples_us": [
+        10.8,
+        29.4,
+        10.6,
+        12.7,
+        10.9,
+        11.5,
+        20.0,
+        11.6,
+        11.9,
+        18.1,
+        10.3,
+        24.4,
+        13.5,
+        13.6,
+        11.9,
+        10.2,
+        20.0,
+        10.0,
+        15.2,
+        9.9
+      ],
+      "median_us": 11.9,
+      "min_us": 9.9,
+      "max_us": 29.4,
+      "spread_us": 19.5,
+      "spread_definition": "max - min",
+      "bandwidth_mib_s": 820.640756302521
+    },
+    "roundtrip": {
+      "samples_us": [
+        22.5,
+        34.9,
+        20.8,
+        34.7,
+        30.9,
+        31.0,
+        29.1,
+        26.0,
+        21.1,
+        33.6,
+        20.3,
+        26.4,
+        30.2,
+        25.6,
+        46.4,
+        20.0,
+        19.6,
+        19.6,
+        36.3,
+        22.6
+      ],
+      "median_us": 26.2,
+      "min_us": 19.6,
+      "max_us": 46.4,
+      "spread_us": 26.799999999999997,
+      "spread_definition": "max - min"
+    }
+  },
+  "errors": [],
+  "routes_if_blocked": [
+    "Free other GPU allocations and repeat the same 512 MiB two-buffer test; record free VRAM before allocation.",
+    "Allocate a single 512 MiB device buffer and perform an explicitly labeled in-place D2D test, or use 256 MiB two-buffer chunks; do not substitute either result for the failed 512 MiB two-buffer measurement."
+  ],
+  "status": "measured"
+}

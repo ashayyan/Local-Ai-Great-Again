@@ -193,3 +193,25 @@ Every run records hypothesis, target, command, model, quant, context, VRAM/RAM p
 - Numbers: Triad 16.94 GB/s; target 24 GB/s; derived dense CPU ternary estimate 4.5–5.3 tok/s; sparsity hypothesis 2× RAM-byte reduction and 8–10 tok/s.
 - Next Experiment: E3.1 activation profile in parallel with E2, while E0 stock baseline remains gated on two IQ3_S runs.
 
+## E0-TOOLCHAIN-20260929 — official CUDA runtime
+
+- Hypothesis/target: official Windows CUDA release provides a runnable CLI with sm_86 CUDA payload, qwen35 support and `--spec-type draft-mtp`; verify release hash/version/help without model weights. Exact asset/API and commands are recorded in `experiments/E0_toolchain.md` and `notes/toolchain_selection.json`.
+- Result: archive `runtimes/llama-b11259-win-cuda-13.4-x64.zip`, 153,546,058 bytes, SHA-256 `7e93d79ed0dfacb67a7a5448eab38b60511ec3ad623022259b08490d5cf01404`; version `0.5.0-dev`, build 11259, commit `d280808f5`; `--spec-type` includes `draft-mtp`; CUDA DLLs present. qwen35 is absent from help and ASCII scans, so qwen35/GDN/model-load/MTP execution remains unverified. No weights downloaded.
+- Routes: (1) acquire IQ3_S and smoke-test this pinned runtime; (2) if load fails, WSL2 or pinned source fork/build with qwen35/GDN support. Cheapest next experiment: download/hash IQ3_S only, then run the registered context-2048 loader smoke test.
+
+### Status / Numbers / Next Experiment
+- Status: Toolchain acquisition passes hash/version/spec-type checks; architecture support is not yet proven.
+- Numbers: 153,546,058-byte archive, 193.57 GB free before download, build 11259/d280808f5, 0 model weights.
+- Next Experiment: Acquire only IQ3_S and test model load before the two baseline runs.
+
+## E0-IQ3S-ACQUIRE-20260929 — throttled acquisition failure
+
+- Hypothesis/target: with >=30 GB free disk, download only the 12,040,883,104-byte IQ3_S artifact and match SHA-256 `d847e2c1e4aa276e4b7b8e9ad7628050e61e165d49ab995407bc36677a6f3864`. Exact command: `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/s17_fetch_iq3s.ps1 -Output models/Qwen3.8-27B-UD-IQ3_S.gguf -Sha256 d847e2c1e4aa276e4b7b8e9ad7628050e61e165d49ab995407bc36677a6f3864`.
+- Run ID `E0-IQ3S-20260929-173714Z`; free disk before run 193.57 GB. HF transfer began but was throttled at approximately 35 KB/s with an estimated 94-hour ETA; process was stopped after approximately 245 MiB partial data and the partial file was removed. No model load or baseline run occurred.
+- Constraint/routes: network throughput is the current acquisition constraint, not disk capacity. Route A: resume through a Hugging Face-capable downloader/CDN with range resume and checksum; Route B: transfer the exact 12,040,883,104-byte artifact from a trusted cache/machine and verify SHA locally. Cheapest next experiment: issue a metadata/range probe or use a resumable `huggingface_hub` transfer and measure sustained rate for 60 seconds before committing the full download.
+
+### Status / Numbers / Next Experiment
+- Status: IQ3_S acquisition blocked by throttled transfer; zero complete weights and zero baseline outputs.
+- Numbers: required 12,040,883,104 bytes; free disk 193.57 GB; observed ~35 KB/s; partial ~245 MiB removed; SHA not produced.
+- Next Experiment: Test resumable/range-capable transfer or trusted-cache copy, then verify exact bytes/SHA before loading.
+

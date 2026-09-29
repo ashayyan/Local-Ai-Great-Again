@@ -1,0 +1,45 @@
+{
+  "route": "A",
+  "project": "ggml-org/llama.cpp",
+  "selection": "official Windows x64 CUDA 13.4 release asset",
+  "release_tag": "b11259",
+  "release_api_url": "https://api.github.com/repos/ggml-org/llama.cpp/releases/tags/b11259",
+  "release_page_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b11259",
+  "assets_api_url": "https://api.github.com/repos/ggml-org/llama.cpp/releases/399364719/assets",
+  "asset_name": "llama-b11259-bin-win-cuda-13.4-x64.zip",
+  "download_url": "https://github.com/ggml-org/llama.cpp/releases/download/b11259/llama-b11259-bin-win-cuda-13.4-x64.zip",
+  "asset_size_bytes": 153546058,
+  "asset_sha256_api": "7e93d79ed0dfacb67a7a5448eab38b60511ec3ad623022259b08490d5cf01404",
+  "asset_sha256_downloaded": "7E93D79ED0DFACB67A7A5448EAB38B60511EC3AD623022259B08490D5CF01404",
+  "local_zip": "runtimes/llama-b11259-win-cuda-13.4-x64.zip",
+  "extract_dir": "runtimes/llama.cpp-release",
+  "version_output": "version: 0.5.0-dev (build 11259, commit d280808f5)\nbuilt with Clang 20.1.8 for Windows x86_64",
+  "help_verification": {
+    "spec_type": "--spec-type none,draft-simple,draft-eagle3,draft-mtp,draft-dflash,draft-dspark,ngram-simple,ngram-map-k,ngram-map-k4v,ngram-mod,ngram-cache",
+    "qwen35_help_string": false,
+    "qwen35_binary_ascii_string": false,
+    "draft_mtp_binary_ascii_string": true,
+    "draft_mtp_binary_string_source": "llama-common.dll"
+  },
+  "hardware_check": {
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "driver": "610.62",
+    "c_free_gb_before_download": 193.57
+  },
+  "weights_downloaded": false,
+  "failure_routes": [
+    {
+      "route": "latest stable API release",
+      "result": "v0.5.0 metadata had only nightly-tag.txt; no Windows CUDA binary asset listed"
+    },
+    {
+      "route": "cudart Windows CUDA 13.4 asset",
+      "result": "available but 423535356 bytes; selected smaller llama-binary package instead"
+    },
+    {
+      "route": "qwen35 literal strings scan",
+      "result": "no qwen35/qwen3.5 ASCII string found in extracted EXE/DLL files; help does not enumerate model architectures"
+    }
+  ],
+  "notes": "Release metadata and asset digest are official GitHub API values. No model weights were downloaded."
+}
