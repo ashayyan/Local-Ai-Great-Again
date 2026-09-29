@@ -92,7 +92,7 @@ def main():
         ctx=ctypes.c_void_p(); d._check(d.cuCtxCreate_v2(ctypes.byref(ctx),0,0))
         try:
             for mib in a.sizes_mib:
-                if mib <= 0 or mib > 64: raise RuntimeError(f"size {mib} MiB outside bounded range 1..64")
+                if mib <= 0 or mib > 512: raise RuntimeError(f"size {mib} MiB outside bounded range 1..512")
                 n=mib*1048576
                 for kind in ("d2d","h2d_pinned","d2h_pinned","h2d_pageable","d2h_pageable"):
                     doc["transfers"].setdefault(str(mib),{})[kind]=one_transfer(d,n,a.samples,a.warmups,kind)
