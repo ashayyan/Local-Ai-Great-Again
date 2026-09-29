@@ -1,0 +1,41 @@
+{
+  "schema": "e0-ffn-gemv-v1",
+  "timestamp_utc": "2026-09-29T16:54:03Z",
+  "script": "scripts/s12_ffn_gemv.py",
+  "shape": [
+    17408,
+    5120
+  ],
+  "batch": 1,
+  "hypothesis": "Resident-weight CUDA GEMV at FFN dimensions has measurable effective bandwidth and correct outputs.",
+  "numeric_target": "BF16 and F32, 5 timed launches after 1 warmup, correct within atol=1e-3/rtol=1e-4, median effective decimal GB/s.",
+  "timing_scope": "host wall-clock launch + cuda.synchronize; excludes weight generation, H2D and JIT",
+  "samples": 5,
+  "warmups": 1,
+  "platform": {
+    "python": "3.13.2",
+    "os": "Windows-11-10.0.26200-SP0"
+  },
+  "status": "unavailable",
+  "dtype_results": {},
+  "errors": [
+    {
+      "stage": "backend/device/context",
+      "error": "IndexError: list index out of range",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\lahd2\\OneDrive\\Desktop\\ai local\\scripts\\s12_ffn_gemv.py\", line 136, in main\n    cuda.current_context()\n    ~~~~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\lahd2\\miniconda3\\Lib\\site-packages\\numba\\cuda\\cudadrv\\devices.py\", line 220, in get_context\n    return _runtime.get_or_create_context(devnum)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^\n  File \"C:\\Users\\lahd2\\miniconda3\\Lib\\site-packages\\numba\\cuda\\cudadrv\\devices.py\", line 138, in get_or_create_context\n    return self._get_or_create_context_uncached(devnum)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^\n  File \"C:\\Users\\lahd2\\miniconda3\\Lib\\site-packages\\numba\\cuda\\cudadrv\\devices.py\", line 158, in _get_or_create_context_uncached\n    ctx = self.gpus[ac.devnum].get_primary_context()\n          ~~~~~~~~~^^^^^^^^^^^\n  File \"C:\\Users\\lahd2\\miniconda3\\Lib\\site-packages\\numba\\cuda\\cudadrv\\devices.py\", line 40, in __getitem__\n    return self.lst[devnum]\n           ~~~~~~~~^^^^^^^^\nIndexError: list index out of range\n"
+    }
+  ],
+  "routes": [
+    "Repair installed Numba CUDA primary-context selection (cuda.current_context() must succeed), then rerun this identical JIT kernel without changing packages.",
+    "Use an already-installed CUDA BLAS runtime (cuBLAS sgemv/gemvEx) through ctypes with explicit symbol and correctness checks; benchmark the same resident-weight shape."
+  ],
+  "backend": {
+    "name": "numba.cuda",
+    "numba": "0.61.2",
+    "numpy": "2.2.5"
+  },
+  "device": {
+    "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "compute_capability": "8.6"
+  }
+}

@@ -112,3 +112,48 @@ Every run records hypothesis, target, command, model, quant, context, VRAM/RAM p
 - Numbers: 2 retained runs × 15 correct cases; 16 MiB pinned H2D 1,860.5/1,841.6 MiB/s; D2D 72,365.5/69,084.5 MiB/s.
 - Next Experiment: Fixed-power uniquely named repeat; then FFN 17408×5120 GEMV/GEMM bandwidth test.
 
+## E0-ROUTE-20260929 — hardware reroute and NVFP4 technical finding
+
+- Pre-registered closure finding: measured 4,096 MiB VRAM makes T2's 5.3 GB whole-model-in-VRAM target dormant on this machine (revisit trigger: >=6 GB usable VRAM), and pinned H2D approximately 1.85 GB/s-equivalent is below T1's 8 GB/s cross-bus streaming threshold. T1 therefore merges into T3: CPU-RAM draft/verify with hidden-state transfers. Multicore RAM bandwidth is the decision-critical probe.
+- Blocked-technical finding: NVFP4 GGUF inference requires sm_120 (Blackwell) CUDA kernels in the candidate path; this machine is sm_86. Missing piece: software NVFP4-to-SM86 kernel path. Status: dormant, not adopted as stock baseline. The minima-ai NVFP4 checkpoint remains the E1 quality teacher for documented free/borrowed compute.
+- Exact constraints: 4,096 MiB VRAM; 5.3 GB target; pinned H2D approximately 1.85 GB/s-equivalent; 8 GB/s threshold; compute capability 8.6. Local measurements and declared route targets are distinguished in `experiments/E0_reroute.md`.
+- Routes: (1) CPU-RAM resident GGUF with hidden-state-only transfers and T3 draft/verify; (2) use a >=6 GB usable-VRAM machine for T2 or implement/validate an SM86 NVFP4 kernel path. Cheapest next experiment: all-core Triad against 24 GB/s target, then 10 KiB pinned latency.
+
+### Status / Numbers / Next Experiment
+- Status: T1/T2 route status recorded; NVFP4 stock path dormant pending SM86 kernel support; no model download performed.
+- Numbers: 4,096 MiB VRAM, CC 8.6, 1.85 GB/s pinned H2D, 8 GB/s T1 threshold, 5.3 GB T2 target.
+- Next Experiment: Complete multicore RAM, large D2D, FFN GEMV, PCIe latency and cold SSD probes before selecting the constrained GGUF baseline.
+
+## E0-CLOSURE-MULTICORE-01 — 2026-09-29
+
+- Hypothesis/target: six threads over the six physical i5-11400H cores, same Triad protocol, 2 warmups and 7 samples, median >=24 GB/s-equivalent. Exact command: `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/s13_multicore_triad.ps1 -Warmup 2 -Repetitions 7 -MiB 256 -Threads 6 -OutputJson notes/multicore_triad.json`. One changed variable: thread count from the prior single-thread probe.
+- Run ID `E0-MULTICORE-20260929-165606Z`; .NET 8.0.15, 3 x 256 MiB arrays, checksum 21. Median **16,154.885 MiB/s (16.94 GB/s decimal)**; 7 raw samples in JSON. VRAM/RAM process peak, thermal/power telemetry not captured.
+- Constraint/routes: observed managed six-thread median is 67.3% of the 24 GB/s target. Routes: (1) native optimized STREAM with arrays beyond LLC and affinity; (2) tune managed worker/array placement and compare. Cheapest next experiment: native or optimized all-core STREAM with simultaneous `nvidia-smi dmon`.
+
+### Status / Numbers / Next Experiment
+- Status: Multicore CPU probe measured; target not met and ceiling remains implementation-dependent.
+- Numbers: 6 threads, median 16,154.885 MiB/s, 2 warmups, 7 samples.
+- Next Experiment: Native/large-array STREAM and thermal telemetry.
+
+## E0-CLOSURE-GEMV-01 — 2026-09-29
+
+- Hypothesis/target: resident CUDA FFN-shaped 17408x5120 M=1 GEMV in BF16 and F32 yields five samples after one warmup with correct output and effective GB/s. Exact command: `python scripts/s12_ffn_gemv.py --output notes/ffn_gemv.json`.
+- Result: unavailable before allocation; Numba 0.61.2 enumerates RTX 3050 CC 8.6 but `cuda.current_context()` fails `IndexError: list index out of range`; a retry also produced an access violation. Intended matrix sizes are 178,257,920 bytes BF16 and 356,515,840 bytes F32; 0 samples and no GB/s claim.
+- Routes: repair Numba primary context and rerun unchanged; or use an installed cuBLAS DLL via ctypes with symbol/correctness checks. Cheapest experiment: `python -c "from numba import cuda; print(len(cuda.gpus)); cuda.select_device(0); print(cuda.current_context())"` and inventory cuBLAS DLLs.
+
+### Status / Numbers / Next Experiment
+- Status: FFN GEMV gate explicitly unavailable, no fabricated throughput.
+- Numbers: 17408x5120, M=1; BF16 178,257,920 bytes; F32 356,515,840 bytes; 0 samples.
+- Next Experiment: Repair context or validate cuBLAS route.
+
+## E0-CLOSURE-D2D-LARGE-01 — 2026-09-29
+
+- Hypothesis/target: resident CUDA D2D at 256 and 512 MiB exposes memory-path bandwidth above the 16 MiB latency regime; target five samples after one warmup per block with correctness true. Exact command: `python scripts/s10_cuda_transfer.py --sizes-mib 256 512 --samples 5 --warmups 1 --output notes/gpu_d2d_large.json --run-id E0-GPU-D2D-large`.
+- Result: the generic helper tests five directions per size and exceeded a 120-second execution bound before producing an output; it was cancelled. No D2D bandwidth number is claimed. Canonical failure record: `notes/gpu_d2d_large.json`.
+- Constraint/routes: large allocations plus pageable/pinned setup overrun the bounded window. Route A: D2D-only helper with one allocation per size and 3 samples; Route B: native CUDA event-timed D2D helper. Cheapest next experiment: D2D-only 256 MiB, 3 samples, unique output.
+
+### Status / Numbers / Next Experiment
+- Status: Large-block D2D probe blocked by timeout in the generic five-direction harness.
+- Numbers: 256/512 MiB requested; 0 samples completed; timeout at 120 seconds.
+- Next Experiment: D2D-only helper, then 512 MiB if 256 MiB completes.
+

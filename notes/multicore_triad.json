@@ -1,0 +1,26 @@
+﻿{
+    "type":  "summary",
+    "operation":  "triad",
+    "array_mib":  256,
+    "arrays":  3,
+    "warmup":  2,
+    "repetitions":  7,
+    "raw_mib_per_sec":  [
+                            14724.66035500236,
+                            15537.217502837362,
+                            15883.12665966265,
+                            16154.884959549683,
+                            16221.867838246011,
+                            16472.16782736825,
+                            17794.50131373467
+                        ],
+    "median_mib_per_sec":  16154.884959549683,
+    "checksum":  21,
+    "dotnet":  "8.0.15",
+    "os":  "Microsoft Windows NT 10.0.26200.0",
+    "processor":  "Intel64 Family 6 Model 141 Stepping 1, GenuineIntel",
+    "run_id":  "E0-MULTICORE-20260929-165606Z",
+    "threads":  6,
+    "hypothesis":  "All physical cores Triad reaches at least 24 GB/s",
+    "numeric_target":  "2 warmups, 7 samples, median \u003e=24 GB/s"
+}

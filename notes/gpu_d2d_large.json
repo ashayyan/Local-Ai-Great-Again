@@ -1,0 +1,10 @@
+{
+  "schema":"e0-gpu-d2d-large-v1",
+  "status":"blocked-timeout",
+  "hypothesis":"Resident CUDA D2D copies at 256 and 512 MiB expose the memory-path bandwidth above the 16 MiB latency regime.",
+  "numeric_target":"5 samples after 1 warmup per block, correctness true, median MiB/s.",
+  "command":"python scripts/s10_cuda_transfer.py --sizes-mib 256 512 --samples 5 --warmups 1 --output notes/gpu_d2d_large.json --run-id E0-GPU-D2D-large",
+  "observed":"The generic probe allocates and tests five directions per size; execution exceeded 120 seconds and was cancelled before producing JSON. No bandwidth number is claimed.",
+  "routes":["Add a D2D-only mode to avoid pageable/pinned setup and rerun 256/512 MiB", "Use a native CUDA event-timed D2D helper with one allocation per size"],
+  "next_experiment":"Run a D2D-only bounded helper with unique output and 3 samples first, expected measured medians or explicit CUDA allocation error."
+}

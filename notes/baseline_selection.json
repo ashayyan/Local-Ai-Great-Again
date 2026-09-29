@@ -1,0 +1,70 @@
+{
+  "schema": "e0-baseline-selection-v1",
+  "timestamp_utc": "2026-09-29",
+  "workspace": "C:\\Users\\lahd2\\OneDrive\\Desktop\\ai local",
+  "weights_downloaded": false,
+  "repo": {
+    "id": "unsloth/Qwen3.8-27B-GGUF",
+    "metadata_http_status": 200,
+    "api_urls": [
+      "https://huggingface.co/api/models/unsloth/Qwen3.8-27B-GGUF?expand%5B%5D=siblings",
+      "https://huggingface.co/api/models/unsloth/Qwen3.8-27B-GGUF/tree/main?recursive=true&expand=true"
+    ]
+  },
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "vram_bytes": 4293918720,
+    "vram_nominal_mib": 4096,
+    "ram_bytes": 17179676184,
+    "ram_nominal_gib": 16
+  },
+  "tools": {
+    "git": "C:\\Program Files\\Git\\cmd\\git.exe",
+    "python": "C:\\Users\\lahd2\\miniconda3\\python.exe",
+    "cmake": false,
+    "ninja": false,
+    "make": false,
+    "cl": false,
+    "gcc": false,
+    "g++": false,
+    "clang": false,
+    "clang++": false,
+    "nvcc": false,
+    "llama_cpp_checkout_or_binary": false
+  },
+  "selection": {
+    "primary": {
+      "file": "Qwen3.8-27B-UD-IQ3_S.gguf",
+      "bytes": 12040883104,
+      "approx_decimal_gb": 12.0
+    },
+    "fallbacks": [
+      {"file": "Qwen3.8-27B-UD-IQ3_XXS.gguf", "bytes": 10934860704, "approx_decimal_gb": 10.9},
+      {"file": "Qwen3.8-27B-UD-IQ2_XXS.gguf", "bytes": 7266070528, "approx_decimal_gb": 7.3}
+    ],
+    "q4_policy": "forbidden_by_16GiB_RAM_constraint",
+    "q4_reason": "UD-Q4 files are approximately 15.4-17.6 GB before runtime/KV/OS/projector overhead; 4 GiB VRAM and 16 GiB RAM cannot provide a safe E0 envelope"
+  },
+  "runtime_status": {
+    "llama_cpp": "absent; no local checkout or llama-cli/llama-server",
+    "qwen35_support": "unknown_unverified; no pinned runtime/source",
+    "mtp_support": "unknown_unverified; MTP artifact listed remotely but no runtime test"
+  },
+  "routes": [
+    {"name": "A", "description": "Pinned CUDA llama.cpp, IQ3_S, partial offload, 2048 context, quantized KV; fallback IQ3_XXS then IQ2_XXS on recorded resource failure"},
+    {"name": "B", "description": "CPU/RAM/SSD layer streaming or pinned fork; keep attention/KV hot on GPU and page FFN/weights"}
+  ],
+  "cheapest_experiment": {
+    "weight_free": true,
+    "commands": [
+      "Get-Command git,cmake,ninja,make,cl,gcc,g++,clang,clang++,nvcc -ErrorAction SilentlyContinue",
+      "Get-Command llama-cli,llama-server -ErrorAction SilentlyContinue",
+      "Get-CimInstance Win32_ComputerSystem | Select-Object TotalPhysicalMemory",
+      "Get-CimInstance Win32_VideoController | Select-Object Name,AdapterRAM,DriverVersion",
+      "Invoke-RestMethod 'https://huggingface.co/api/models/unsloth/Qwen3.8-27B-GGUF?expand[]=siblings'",
+      "Invoke-RestMethod 'https://huggingface.co/api/models/unsloth/Qwen3.8-27B-GGUF/tree/main?recursive=true&expand=true'"
+    ],
+    "expected": "No llama.cpp/cmake/compiler; 16 GiB RAM and 4 GiB VRAM; API HTTP 200 with exact GGUF sizes; no model files created"
+  },
+  "report": "experiments/E0_baseline_selection.md"
+}
