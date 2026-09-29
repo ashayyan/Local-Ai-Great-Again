@@ -1,0 +1,34 @@
+{
+  "release": "b11259",
+  "release_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b11259",
+  "target_commitish": "d280808f5d82fcc3142b53f94ea5f594250cd765",
+  "asset": {
+    "name": "llama-b11259-bin-win-cuda-12.4-x64.zip",
+    "url": "https://github.com/ggml-org/llama.cpp/releases/download/b11259/llama-b11259-bin-win-cuda-12.4-x64.zip",
+    "official_size_bytes": 264528828,
+    "sha256": "4f0551811b6e836344a90176583031f9ac0fe258359eb3f0bc94c81a88087cd5",
+    "local_size_bytes": 264528828,
+    "local_sha256": "4f0551811b6e836344a90176583031f9ac0fe258359eb3f0bc94c81a88087cd5",
+    "downloaded": true,
+    "model_downloaded": false
+  },
+  "archive_path": "runtimes/llama-b11259-bin-win-cuda-12.4-x64.zip",
+  "extracted_dir": "runtimes/llama-b11259-cuda124",
+  "runtime_test": {
+    "path_dlls": true,
+    "command": "llama-cli.exe --version; llama-cli.exe --list-devices",
+    "version_stdout_stderr": "version: 0.5.0-dev (build 11259, commit d280808f5)\nbuilt with Clang 20.1.8 for Windows x86_64",
+    "list_devices_stdout_stderr": "Available devices:\n  (none)",
+    "version_exit_code": 0,
+    "list_devices_exit_code": 0
+  },
+  "existing_b11259_test": {
+    "directory": "runtimes/llama.cpp-release",
+    "path_dlls": true,
+    "version": "version: 0.5.0-dev (build 11259, commit d280808f5)\nbuilt with Clang 20.1.8 for Windows x86_64",
+    "list_devices": "Available devices:\n  (none)",
+    "version_exit_code": 0,
+    "list_devices_exit_code": 0
+  },
+  "result": "Asset verified and runtime commands succeeded; no CUDA devices were reported."
+}

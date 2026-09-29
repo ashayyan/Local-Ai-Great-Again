@@ -280,3 +280,26 @@ Every run records hypothesis, target, command, model, quant, context, VRAM/RAM p
 - Numbers: driver 610.62, reported CUDA 13.3, RTX 3050 CC 8.6 from prior hardware record, b11259 CUDA 13.4 CLI device list empty.
 - Next Experiment: CUDA 12.4 build discovery and device-list check before any model load.
 
+## E0-CUDA124-20260929 — same-commit runtime trial
+
+- Hypothesis/target: official b11259 Windows CUDA 12.4 binary matching commit `d280808f5` exposes the RTX 3050 where CUDA 13.4 did not; require `--list-devices` with one device and CC 8.6.
+- Asset: `runtimes/llama-b11259-bin-win-cuda-12.4-x64.zip`, 264,528,828 bytes, API/local SHA `4f0551811b6e836344a90176583031f9ac0fe258359eb3f0bc94c81a88087cd5`; version build 11259/d280808f5. Commands ran with extracted DLL directory on PATH.
+- Result: `--version` exit 0; `--list-devices` exit 0 but exact output `Available devices:\n  (none)`. Existing CUDA 13.4 b11259 directory produces the same. No model load or CUDA support claim.
+- Routes: diagnose Optimus/PATH/backend initialization or update/retest driver; alternatively use WSL2/source build with a validated CUDA backend. Cheapest experiment: capture `nvidia-smi -L` beside a same-directory `--list-devices` run, then test a runtime build with known CUDA 12.x dependencies.
+
+### Status / Numbers / Next Experiment
+- Status: CUDA 12.4 asset hash/version verified; device enumeration remains zero.
+- Numbers: driver 610.62, reported CUDA 13.3, CC 8.6 hardware; CUDA 12.4 and 13.4 CLIs both report zero devices.
+- Next Experiment: acquire exact IQ3_S only after route hash enforcement, then CPU/load smoke if CUDA backend remains unavailable.
+
+## E0-IQ3S-ROUTEA-MISMATCH-20260929 — parallel aria2 acquisition
+
+- Hypothesis/target: 16-connection resumable aria2 against the exact HF URL reaches 12,040,883,104 bytes and SHA `d847e2...3864` within three hours. Initial script used `--check-integrity=false`; corrected script now enforces SHA checksum.
+- Result: route reached full **12,040,883,104 bytes** at measured average **45.666588 MiB/s**, but observed SHA was `172f90b528c1c87f80dd58807771c1f7ce5cdc40632ecded65e311bdafd16565`, not the expected digest. The artifact and `.aria2` state were removed; no bytes are treated as verified. Canonical mismatch record is `notes/iq3s_acquisition_routeA.json`.
+- Constraint/routes: byte count matched but integrity failed. Route A: rerun with aria2 checksum enforcement and immutable revision/file metadata; Route B: trusted exact copy verified locally. Cheapest next experiment: rerun corrected `scripts/s18_aria2_iq3s.ps1` with `--checksum` and then inspect HTTP commit/ETag binding before load.
+
+### Status / Numbers / Next Experiment
+- Status: High-throughput route works but produced a digest mismatch; baseline remains blocked.
+- Numbers: 12,040,883,104 bytes, 45.666588 MiB/s, expected SHA d847e2..., observed SHA 172f90..., verified bytes 0.
+- Next Experiment: checksum-enforced resumable acquisition from an immutable revision or trusted cache.
+

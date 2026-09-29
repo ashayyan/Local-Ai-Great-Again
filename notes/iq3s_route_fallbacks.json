@@ -1,0 +1,20 @@
+{
+  "schema": "e0-iq3s-route-fallbacks-v1",
+  "generated_utc": "2026-09-29T18:30:00Z",
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "artifact": "Qwen3.8-27B-UD-IQ3_S.gguf",
+  "expected_bytes": 12040883104,
+  "expected_sha256": "d847e2c1e4aa276e4b7b8e9ad7628050e61e165d49ab995407bc36677a6f3864",
+  "secrets_policy": "No tokens, cookies, signed URLs, or query signatures stored; URLs are origin/path only.",
+  "metadata": {
+    "huggingface_api": {"status": "200", "repo_sha": "4ca720788d1e01f1bff70c033e0d0028fd02e502", "artifact_size": 12040883104, "artifact_sha256": "d847e2c1e4aa276e4b7b8e9ad7628050e61e165d49ab995407bc36677a6f3864", "gated": false, "source": "https://huggingface.co/api/models/unsloth/Qwen3.8-27B-GGUF"},
+    "modelscope_api": {"status": "200", "repo": "unsloth/Qwen3.8-27B-GGUF", "artifact_listed": true, "artifact_size": 12040883104, "artifact_sha256": "d847e2c1e4aa276e4b7b8e9ad7628050e61e165d49ab995407bc36677a6f3864", "source": "https://modelscope.cn/api/v1/models/unsloth/Qwen3.8-27B-GGUF"}
+  },
+  "bounded_tests": [
+    {"route": "huggingface_http", "status": "range_ok", "http_status": 200, "request": "GET first 1 MiB; max-time 30s", "elapsed_seconds": 1.490, "bytes_received": 1048576, "throughput_bytes_per_second": 703700.4, "partial_cache": "models/iq3s-route-http.partial", "url": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF/resolve/main/Qwen3.8-27B-UD-IQ3_S.gguf"},
+    {"route": "modelscope", "status": "range_ok", "http_status": 200, "request": "GET first 1 MiB; max-time 30s", "elapsed_seconds": 3.446, "bytes_received": 1048576, "throughput_bytes_per_second": 304322.1, "partial_cache": "models/iq3s-route-modelscope.partial", "url": "https://modelscope.cn/models/unsloth/Qwen3.8-27B-GGUF/resolve/master/Qwen3.8-27B-UD-IQ3_S.gguf"}
+  ],
+  "hf_transfer": {"status": "not_installed", "python": "3.13.2", "pypi_latest": "0.1.9", "decision": "not installed; bounded HTTP test already works and no client package is needed for route confirmation", "env_flag": "not set; no high-performance HF flag used", "source": "https://pypi.org/pypi/hf_transfer/json"},
+  "acquisition_status": "metadata_and_bounded_routes_verified; full download not attempted",
+  "next_route": "Use Hugging Face HTTP first (2.31x faster in bounded probe); retain ModelScope as fallback. Resume from ignored partial files and verify final SHA-256."
+}
