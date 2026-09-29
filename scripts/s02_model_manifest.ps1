@@ -59,7 +59,7 @@ $indexKeys = @()
 $indexError = $null
 if ($weightIndex.Count -eq 1) {
     try {
-        $indexDoc = Get-Content -LiteralPath (Join-Path $modelRoot ($weightIndex[0].path -replace '/', [IO.Path]::DirectorySeparatorChar)) -Raw | ConvertFrom-Json -ErrorAction Stop
+        $indexDoc = Get-Content -LiteralPath (Join-Path $modelRoot ($weightIndex[0].path.Replace('/', [IO.Path]::DirectorySeparatorChar))) -Raw | ConvertFrom-Json -ErrorAction Stop
         $indexKeys = @($indexDoc.weight_map.PSObject.Properties.Name)
     } catch { $indexError = $_.Exception.Message }
 }

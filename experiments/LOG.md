@@ -16,3 +16,19 @@ Every run records hypothesis, target, command, model, quant, context, VRAM/RAM p
 - Numbers: 4 GB VRAM; SM 8.6; 16 GB RAM; 6C/12T CPU; SSD sample 60.13 write / 138.83 read MB/s; GPU/CPU bandwidth and PCIe application throughput unmeasured.
 - Next Experiment: Run supported PCIe inventory and pinned H2D/D2H plus FFN GEMV/GEMM and STREAM helpers; update profile without overwriting prior run artifacts.
 
+## E0-MANIFEST-01 — 2026-09-29 UTC (offline artifact inventory)
+
+- Hypothesis (pre-run): the available local `models/` directory can be classified without loading weights, and missing architecture/loader evidence is explicitly represented.
+- Numeric target (pre-run): 8/8 required component status records, SHA-256 for 100% of present asset files, zero downloaded weight bytes, and an explicit immutable-revision status.
+- Only variable: model artifact availability in the existing `models/` path; no quant/runtime/context settings changed. This is an inventory, not a comparative inference experiment.
+- Exact command: `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/s02_model_manifest.ps1 -ModelPath models -Output models/qwen3.8-27b-manifest.json -Offline`.
+- Script: `scripts/s02_model_manifest.ps1`; script SHA-256 (working-tree tested version): `8a17eecf25cc6c23e7166ccc7d94a61a86b1fc384f9539374c3533411dc28117`; source requested `Qwen/Qwen3.8-27B`, revision unresolved (no checkout/metadata). Generated machine record: ignored `models/qwen3.8-27b-manifest.json`.
+- Asset/model file: none; quant: none; context, seed, prompt set, warmups, repetitions: not applicable to directory inventory. VRAM/RAM peak, prefill/decode tok/s, TTFT, quality sample: not measured, no model execution.
+- Observed: 0 model files, 0 file hashes, 8/8 components explicitly missing, 0 config-derived architecture fields, tokenizer/processor revisions unresolved, no pinned runtime. Source model size ~55.6 GB is externally reported, not measured in this run. No asset downloads.
+- Constraint: zero local asset bytes means model revision and full-model compatibility remain unverified. Routes: (1) fetch config/tokenizer/processor/index only at a verified 40-hex revision; (2) import a metadata-only offline snapshot from a trusted machine. Runtime route alternatives after metadata: pinned compatible Windows build, or WSL2/architecture fixture, each separately labeled.
+
+### Status / Numbers / Next Experiment
+- Status: Offline inventory generated; model compatibility classified as unverified and required artifacts as missing, not silently complete.
+- Numbers: 0 files; 0 SHA-256 asset hashes; 8 missing components; 0 downloads; 0 runtime tests.
+- Next Experiment: Resolve exact SHA with `python -c "from huggingface_hub import HfApi; print(HfApi().model_info('Qwen/Qwen3.8-27B').sha)"`, download only metadata with the `snapshot_download` command in `notes/model_compatibility.md`, rerun manifest; expected measurable result is metadata hashes and config/index coverage with zero safetensors weights downloaded.
+
