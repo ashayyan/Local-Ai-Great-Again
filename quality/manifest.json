@@ -1,0 +1,14 @@
+{
+  "schema": "quality-v1",
+  "text_prompt_count": 50,
+  "text_prompt_file": "quality/prompts/text_50.json",
+  "calibration_ids": ["cal-001", "cal-002"],
+  "eval_ids": ["text-001", "text-002", "text-003", "text-004", "text-005", "text-006", "text-007", "text-008", "text-009", "text-010", "text-011", "text-012", "text-013", "text-014", "text-015", "text-016", "text-017", "text-018", "text-019", "text-020", "text-021", "text-022", "text-023", "text-024", "text-025", "text-026", "text-027", "text-028", "text-029", "text-030", "text-031", "text-032", "text-033", "text-034", "text-035", "text-036", "text-037", "text-038", "text-039", "text-040", "text-041", "text-042", "text-043", "text-044", "text-045", "text-046", "text-047", "text-048", "text-049", "text-050"],
+  "image_categories": ["OCR", "charts", "spatial", "multistep"],
+  "image_status": "fixtures-pending",
+  "tokenizer_revision": null,
+  "processor_revision": null,
+  "model_revision": null,
+  "quality_reference_status": "unmeasured",
+  "note": "Prompt fixture only; calibration samples, image fixtures, reference outputs, and perplexity harness remain pending."
+}
