@@ -62,3 +62,16 @@ Every run records hypothesis, target, command, model, quant, context, VRAM/RAM p
 - Numbers: 0 model weight files; context 2048; prefill/decode/VRAM/RAM/quality unmeasured.
 - Next Experiment: Resolve immutable checkpoint SHA and metadata-only download, then pin compatible stock runtime.
 
+## E0-METADATA-02 — 2026-09-29 (official source metadata only)
+
+- Pre-run hypothesis/target: revision-pinned Qwen source config and weight index can be downloaded and hashed without weight shards; target >=2 metadata files, 0 safetensors weight downloads, confirm 64/48/16 layers.
+- Only changed variable from offline inventory: metadata availability. Exact commands: `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/s02_fetch_metadata.ps1 -Revision 1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0 -ModelPath models -TimeoutSeconds 30`; then `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/s02_model_manifest.ps1 -ModelPath models -Output models/qwen3.8-27b-manifest.json -Revision 1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0 -TokenizerRevision 1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0 -ProcessorRevision 1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0 -Offline`.
+- Scripts: `scripts/s02_fetch_metadata.ps1`, `scripts/s02_model_manifest.ps1`; git commit after implementation `463bf5b`. Model source SHA from official API; quant none; context/prefill/decode/VRAM/RAM peaks/quality not applicable (no inference).
+- Observed: 7 metadata files hashed; 1,199 indexed tensors in 18 shards, all 18 shards absent; config 64 layers, 48 linear, 16 full, vision depth 27, native MTP depth 1; index metadata total size 55,562,855,904 bytes. Source and file hashes in `notes/model_metadata_followup.md`. Zero weight shards downloaded.
+- Constraint/routes: 18 missing shards, 0 local weights. Route A pinned NVFP4+compatible runtime with CPU/RAM tier; Route B pinned GGUF stock reference/partial offload with architecture audit. Cheapest next experiment: pin/fetch tokenizer metadata and validate loader support without weight download.
+
+### Status / Numbers / Next Experiment
+- Status: Metadata gate improved; full-model inference baseline remains open.
+- Numbers: 7 files, 1,199 tensors, 18 missing shards, 64/48/16 layers, 27 vision layers, 1 MTP layer.
+- Next Experiment: Fetch tokenizer and image processor metadata; test stock loader architecture support, then acquire weights.
+

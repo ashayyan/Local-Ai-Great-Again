@@ -4,7 +4,7 @@
 |---|---|---|
 | REQ-E0-01 | `notes/hardware_profile.json`, `experiments/LOG.md` | Partial: identity measured twice; full rerun protocol pending |
 | REQ-E0-02 | `notes/hardware_profile.json` | Open: GPU/CPU/PCIe bandwidth unmeasured; SSD 1 MiB sample only |
-| REQ-E0-03 | `notes/model_compatibility.md` | Open: zero local source assets, revision unresolved |
+| REQ-E0-03 | `notes/model_compatibility.md`, `notes/model_metadata_followup.md` | Partial: pinned config/index metadata parsed; 18/18 weight shards and full tokenizer remain absent; runtime untested |
 | REQ-E0-04 | `experiments/E0_stock_baseline.md` | Open: zero weights, no inference |
 | REQ-E0-05 | `experiments/E0_quant_ladder.md` | Open: zero quant tiers measured |
 | REQ-E0-06 | `quality/manifest.json` | Partial: 50 text prompts; image/calibration/reference fixtures pending |
@@ -14,12 +14,12 @@
 
 ## Blocker routes
 
-- **Constraint:** 4,096 MB measured GPU VRAM; local model weight files: 0; GPU/CPU/PCIe bandwidth values: unmeasured. No full-model speed/quality sample exists.
+- **Constraint:** 4,096 MiB reported GPU VRAM; 0/18 indexed BF16 weight shards locally present (index total size 55,562,855,904 bytes); GPU/CPU/PCIe achievable bandwidth values unmeasured. No full-model speed/quality sample exists.
 - **Route A:** Pin source revision, fetch metadata and NVFP4 shards, use compatible stock runtime with CPU/RAM offload.
 - **Route B:** Pin compatible GGUF reference and run stock partial offload or CPU-only fallback; preserve model-feature support classification.
-- **Cheapest next experiment:** Resolve immutable model SHA, metadata-only download, rerun `scripts/s02_model_manifest.ps1`; separately implement CUDA/STREAM transfer probes.
+- **Cheapest next experiment:** Fetch tokenizer metadata at pinned SHA `1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0`, rerun `scripts/s02_model_manifest.ps1`; separately implement CUDA/STREAM transfer probes.
 
 ## Status / Numbers / Next Experiment
 - **Status:** E0 gate remains open. Partial hardware/fixture evidence is committed; no thesis promotion or baseline performance claim.
-- **Numbers:** 4 GB VRAM, 16 GiB RAM, 6C/12T CPU, 50 text prompts, 0 local model weights, 0 quant tiers measured.
+- **Numbers:** 4,096 MiB reported VRAM, 16 GiB RAM, 6C/12T CPU, 50 text prompts, 7 model metadata files, 18/18 weight shards missing, 0 quant tiers measured.
 - **Next Experiment:** Metadata-only source pin followed by repeated native bandwidth and pinned-transfer probes; then first stock full-model output at context 2048.
