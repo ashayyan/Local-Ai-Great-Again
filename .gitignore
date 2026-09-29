@@ -9,3 +9,7 @@
 /quality/results/*.json
 /quality/quant_ladder/*.json
 /experiments/raw/stock/E0-STOCK-*.json
+/experiments/raw/download-tests/
+/experiments/raw/runtime-validation/
+/notes/hf_route_tests/**/*.bin
+/notes/hf_route_tests/hf-home-*/
