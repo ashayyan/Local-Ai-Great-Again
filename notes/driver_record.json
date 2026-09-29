@@ -1,0 +1,9 @@
+{
+    "schema":  "e0-driver-record-v1",
+    "timestamp_utc":  "2026-09-29T18:27:23.2945978Z",
+    "driver_line":  "Driver Version                                         : 610.62 [Deprecated; will be removed in CUDA 14.0. Use KMD Version instead]",
+    "cuda_line":  "CUDA Version                                           : 13.3 [Deprecated; will be removed in CUDA 14.0. Use CUDA UMD Version instead]",
+    "runtime":  "llama b11259 CUDA 13.4",
+    "device":  "GPU 0: NVIDIA GeForce RTX 3050 Laptop GPU (UUID: GPU-61921ed7-a1ff-7f09-f4ba-50985e3365c5)",
+    "command":  "nvidia-smi -q"
+}

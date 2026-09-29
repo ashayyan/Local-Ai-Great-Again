@@ -268,3 +268,15 @@ Every run records hypothesis, target, command, model, quant, context, VRAM/RAM p
 - Numbers: Triad 16.94 GB/s; hot-row reduction hypothesis unmeasured; 10 KiB round trip 26.2 us before 128-hop accounting.
 - Next Experiment: complete bounded acquisition recovery, then use measured model traces rather than derived hot-row assumptions.
 
+## E0-DRIVER-20260929 — driver compatibility record
+
+- Pre-run hypothesis: record the actual driver/KMD and CUDA version before selecting a llama.cpp CUDA package; target a complete `nvidia-smi -q` record, GPU identity, and current runtime visibility.
+- Exact command: `nvidia-smi -q`; raw output `notes/nvidia-smi-q.txt`; machine record `notes/driver_record.json`.
+- Observed: NVIDIA driver `610.62` (nvidia-smi marks it deprecated for CUDA 14), reported CUDA version `13.3`, device `NVIDIA GeForce RTX 3050 Laptop GPU`, UUID recorded. Current b11259 CUDA 13.4 llama CLI previously reports zero devices despite nvidia-smi seeing GPU 0.
+- Routes: (1) obtain same-commit CUDA 12.4-compatible Windows build and require `--list-devices` CC 8.6; (2) diagnose Optimus/PATH DLL routing or update/revalidate driver/runtime pair. Cheapest next experiment: run CUDA 12.x package `--list-devices` from its own directory with `nvidia-smi -L` captured.
+
+### Status / Numbers / Next Experiment
+- Status: Driver fact recorded; working llama.cpp CUDA pair not established.
+- Numbers: driver 610.62, reported CUDA 13.3, RTX 3050 CC 8.6 from prior hardware record, b11259 CUDA 13.4 CLI device list empty.
+- Next Experiment: CUDA 12.4 build discovery and device-list check before any model load.
+
