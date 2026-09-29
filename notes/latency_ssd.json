@@ -1,0 +1,46 @@
+{
+  "schema": "e0-latency-ssd-v1",
+  "run_id": "E0-LATSSD-20260929-170531Z",
+  "hypothesis": "10 KiB pinned transfers characterize hidden-state hop latency and a file larger than 16 GiB avoids RAM-only cache reuse for sequential SSD reads.",
+  "numeric_target": "20 round trips with median/spread; 17 GiB sequential read; explicit measured/unavailable fields",
+  "transfer": {
+    "status": "measured",
+    "bytes": 10240,
+    "samples_us": [
+      14.899764209985733,
+      7.8999437391757965,
+      6.00004568696022,
+      6.499700248241425,
+      6.100162863731384,
+      5.7998113334178925,
+      5.7998113334178925,
+      5.899928510189056,
+      13.09998333454132,
+      11.499971151351929,
+      15.200115740299225,
+      13.09998333454132,
+      12.400094419717789,
+      15.900004655122757,
+      11.600088328123093,
+      12.100208550691605,
+      10.19984483718872,
+      12.100208550691605,
+      10.800082236528397,
+      9.09995287656784
+    ],
+    "median_us": 11.499971151351929,
+    "min_us": 5.7998113334178925,
+    "max_us": 15.900004655122757,
+    "note": "Device address zero may return driver error on some systems; return codes were not separately asserted."
+  },
+  "ssd": {
+    "status": "measured",
+    "bytes": 18253611008,
+    "write_seconds": 111.26141029968858,
+    "read_seconds": 18.411132600158453,
+    "write_mib_s": 156.46035721739116,
+    "read_mib_s": 945.5148891736394,
+    "file": "temp 17 GiB sequential pattern"
+  },
+  "errors": []
+}

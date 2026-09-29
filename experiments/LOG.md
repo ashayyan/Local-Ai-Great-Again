@@ -157,3 +157,15 @@ Every run records hypothesis, target, command, model, quant, context, VRAM/RAM p
 - Numbers: 256/512 MiB requested; 0 samples completed; timeout at 120 seconds.
 - Next Experiment: D2D-only helper, then 512 MiB if 256 MiB completes.
 
+## E0-CLOSURE-LATSSD-01 — 2026-09-29
+
+- Hypothesis/target: 10 KiB hidden-state transfer latency can be characterized with 20 pinned round trips; a 17 GiB sequential file measures SSD throughput beyond 16 GiB RAM. Exact command: `python scripts/s14_latency_ssd.py`. Run ID `E0-LATSSD-20260929-170531Z`.
+- SSD result: 18,253,611,008 bytes temporary file; write 156.46 MiB/s; read 945.51 MiB/s. This is a large sequential sample, not an absolute device ceiling because cache bypass was not independently proven.
+- Transfer result: **invalid/unavailable** for planning because the first helper version used a null device address and did not assert CUDA return codes. It produced 20 untrusted timing values, median 11.50 us, range 5.80–15.90 us; no valid H2D/D2H copy is claimed.
+- Constraint/routes: valid 10 KiB latency is still missing. Route A: allocate device memory and assert every CUDA API return, then measure separate H2D/D2H; Route B: use a corrected existing CUDA transfer helper with a dedicated 10 KiB mode. Cheapest next experiment: repair address allocation/return checks and rerun 20 samples.
+
+### Status / Numbers / Next Experiment
+- Status: SSD large-file sample measured; PCIe latency probe explicitly invalidated.
+- Numbers: 17 GiB read 945.51 MiB/s; write 156.46 MiB/s; 0 valid PCIe latency samples.
+- Next Experiment: Correct 10 KiB pinned H2D/D2H helper and rerun; repeat SSD with cache policy recorded.
+
