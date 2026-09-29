@@ -215,3 +215,56 @@ Every run records hypothesis, target, command, model, quant, context, VRAM/RAM p
 - Numbers: required 12,040,883,104 bytes; free disk 193.57 GB; observed ~35 KB/s; partial ~245 MiB removed; SHA not produced.
 - Next Experiment: Test resumable/range-capable transfer or trusted-cache copy, then verify exact bytes/SHA before loading.
 
+## E0-IQ3S-ROUTE-PROBES-20260929 — bounded transfer diagnostics
+
+- Pre-run hypothesis/target: determine if the unchanged `Qwen3.8-27B-UD-IQ3_S.gguf` route is viable via available HF tooling and an Xet-backed CDN, using metadata/HEAD and at most one 1 MiB range request; no full download. Existing target metadata says 12,040,883,104 bytes and prior log records SHA-256 `d847e2c1e4aa276e4b7b8e9ad7628050e61e165d49ab995407bc36677a6f3864` but that digest has no immutable revision binding.
+- Exact existing script inspected: `scripts/s17_fetch_iq3s.ps1`; it defaults to `https://huggingface.co/unsloth/Qwen3.8-27B-GGUF/resolve/main/Qwen3.8-27B-UD-IQ3_S.gguf` and curl `-L --fail --retry 2 -o` does not request resume/range. The repo API returned HTTP 200 and current main revision `4ca720788d1e01f1bff70c033e0d0028fd02e502`; requested exact filename is present among 33 entries. The repo revision is mutable relative to prior metadata and does not validate prior hash/size association.
+- HF client: `C:\Users\lahd2\miniconda3\python.exe`; `huggingface_hub` is not installed (`find_spec` false, module CLI fails ModuleNotFoundError). Thus neither normal Hub Python route nor `HF_HUB_DISABLE_XET=1` route could execute; no package was installed.
+- HEAD/redirect: Windows `curl.exe`, status 200, one redirect, effective host `us.aws.cdn.hf.co`, remote IP `15.236.197.3`, ~0.944 s, 0 bytes, reported speed 0 B/s. Ranged request: HTTP 206, same CDN host/IP, one redirect, one requested/retained MiB, 2.009 s, curl reported 567,518 B/s, retries 0. The probe is preserved at `models/.iq3s-range-probe.partial` (1,048,576 bytes; SHA-256 `177ae5e70ef0d340fdf2d1d75539cf992d69eecdd8d244e36e33456cdcb07cfa`). This deliberately retained partial is not the model file and is not a successful full transfer. Effective URL and signed query were not recorded; no tokens were logged.
+- Machine record: `experiments/e0_runs/iq3s-route-probes.json`. No full artifact download or quant/revision substitution occurred. Earlier ~35 KB/s report remains distinct and is not overwritten by this short CDN sample.
+- Routes: (1) install/pin Hub client then compare short windows with Xet enabled and `HF_HUB_DISABLE_XET=1`, both range-resumable and sanitized; (2) use curl range-resume against the same exact artifact with checksum after immutable-revision metadata binding. Cheapest next test: 10–15 s bounded Hub transfer per route, retaining cache and recording effective hostname only.
+
+### Status / Numbers / Next Experiment
+- Status: route diagnostic achieved for redirecting curl; `huggingface_hub` and disabled-Xet test unavailable because client is absent; full acquisition and hash verification remain unperformed.
+- Numbers: API HTTP 200; repo SHA `4ca720788d1e01f1bff70c033e0d0028fd02e502`; curl HEAD 200/0 B; range 206, 1 MiB in 2.009 s, 567,518 B/s, 1 redirect, 0 retries; retained partial 1,048,576 bytes. No signed URLs/tokens in artifacts.
+- Next Experiment: pin `huggingface_hub`, bind target file metadata to an immutable repo SHA, then perform matched fixed-window Xet-on/off tests without changing quant.
+
+## E0-RUNTIME-VALIDATE-20260929 — pinned Windows CUDA CLI (no model)
+
+- Pre-run hypothesis/target: the already-pinned llama.cpp CUDA package exposes a runnable CLI, stable version/help, matching archive digest, and an observable CUDA backend/device list; target is successful version/help commands, package SHA-256 matching the previously recorded release digest, and explicit device-list output. This validates the runtime artifact only, not architecture/model support.
+- Exact commands: `& "runtimes/llama.cpp-release/llama-cli.exe" --version`; `& "runtimes/llama.cpp-release/llama-cli.exe" --help`; `& "runtimes/llama.cpp-release/llama-cli.exe" --list-devices`; `Get-FileHash runtimes/llama-b11259-win-cuda-13.4-x64.zip -Algorithm SHA256`.
+- Executable: `runtimes/llama.cpp-release/llama-cli.exe`. Version output: `version: 0.5.0-dev (build 11259, commit d280808f5)` and `built with Clang 20.1.8 for Windows x86_64` (exit 0). Help exit 0; full exact stdout is in `experiments/raw/runtime-validation/run.json`. It includes CUDA-relevant switches such as `--list-devices`, `--gpu-layers`, and `--spec-type`.
+- Package: `runtimes/llama-b11259-win-cuda-13.4-x64.zip`, 153,546,058 bytes, observed SHA-256 `7e93d79ed0dfacb67a7a5448eab38b60511ec3ad623022259b08490d5cf01404` (matches pinned release digest). Extracted `ggml-cuda.dll` is present.
+- Backend/device visibility: `--list-devices` exit 0, exact output `Available devices:\n  (none)`. Thus this run confirms the CLI process works and records that it exposes no devices; it does not establish usable CUDA execution. No model was downloaded, no model was loaded, no inference was run, and no model architecture support is claimed. Model, quant, context, VRAM/RAM peaks, token speeds, and quality are not applicable/unmeasured.
+- Machine-readable/raw record: `experiments/raw/runtime-validation/run.json` includes the full help output, command strings, exit codes, output, package size/hash, DLL presence, and explicit no-model/no-inference/no-support-claim fields.
+- Constraint/routes: CUDA device enumeration produced zero visible devices despite the CUDA DLL being present. Routes: (1) diagnose CUDA backend initialization/device discovery in this process and rerun the same `--list-devices` check; (2) use a separately validated CUDA-capable runtime environment/build and compare its device list. Cheapest next experiment: run the same executable from its runtime directory with `--list-devices` while capturing stderr and `nvidia-smi -L`; expected measurable result is either the RTX 3050 device listed or an exact backend/device initialization discrepancy. Do not acquire weights until this runtime/backend gate is understood.
+
+### Status / Numbers / Next Experiment
+- Status: CLI version/help and package hash validated; backend device list is empty. Runtime validation only; model support remains untested and unclaimed.
+- Numbers: version 0.5.0-dev/build 11259/commit d280808f5; 153,546,058-byte archive; matching SHA-256; CUDA DLL present; `--list-devices` reports 0 devices; 0 model downloads and 0 inference runs. A separate `nvidia-smi -L` check sees `NVIDIA GeForce RTX 3050 Laptop GPU`; repeating `--list-devices` from `runtimes/llama.cpp-release` still produced no listed device (raw output in `experiments/raw/runtime-validation/list-devices-runtime-dir.json`).
+- Next Experiment: Diagnose the runtime/backend initialization discrepancy before treating GPU offload as available; retain a CPU/load smoke path only after the exact GGUF is verified.
+
+## E0-IQ3S-HF-CLIENT-TRIALS-20260929 — bounded client route attempts
+
+- Pre-run hypothesis/target: use the exact IQ3_S filename and immutable observed repo revision `4ca720788d1e01f1bff70c033e0d0028fd02e502` with `hf download`, one worker, local-dir resumable state, and fixed short windows; compare default Xet behavior with `HF_HUB_DISABLE_XET=1`. Do not log tokens or signed URLs and do not change quant.
+- Client installation: `huggingface_hub 2.0.0`, `hf_xet 1.6.0`, Python `C:\Users\lahd2\miniconda3\python.exe`; the first attempts were invalid because this CLI does not support the older `--resume-download` option. Those failures are retained in `experiments/raw/download-tests/hf-xet-enabled.json` and `hf-xet-disabled.json` (exit 2, 0 bytes).
+- Corrected trials were launched with `--max-workers 1`, no unsupported resume flag, and separate local directories. Their machine records are `experiments/raw/download-tests/hf-xet-enabled-v3.json` and `hf-xet-disabled-v3.json`; logs are sanitized to exclude signed query material. The process was bounded to the short diagnostic window and any partial/cache state is retained. A prior curl range trial remains the only completed transfer measurement: HTTP 206, 1 MiB in 2.009 s, 567,518 B/s (0.542 MiB/s), one redirect to `us.aws.cdn.hf.co`, zero retries.
+- Constraint/routes: the exact expected artifact remains 12,040,883,104 bytes with previously recorded SHA-256 `d847e2c1e4aa276e4b7b8e9ad7628050e61e165d49ab995407bc36677a6f3864`, but that digest has not been cryptographically bound to the observed mutable-main revision. Route A is the corrected HF client with retained cache; Route B is Xet-disabled ordinary HTTP; Route C is a trusted exact copy verified locally. Do not enable `HF_XET_HIGH_PERFORMANCE` on this 16 GiB host.
+
+### Status / Numbers / Next Experiment
+- Status: exact quant/revision selection preserved; full artifact is not yet verified and no inference claim is allowed. Runtime sees the GPU through `nvidia-smi` but the pinned CLI reports zero devices.
+- Numbers: target 12,040,883,104 bytes; target SHA-256 `d847e2c1e4aa276e4b7b8e9ad7628050e61e165d49ab995407bc36677a6f3864`; completed curl sample 0.542 MiB/s; prior sustained observation ~0.034 MiB/s; 16 GiB RAM; 4,096 MiB VRAM; no model bytes verified.
+- Next Experiment: collect the corrected v3 route results, then either resume the best route or copy a trusted exact artifact; verify size and SHA before a metadata/load smoke test and two pre-registered text-only baselines.
+
+## E0-INTERPRETATION-CORRECTION-20260929
+
+- T2 wholly resident in 4 GiB VRAM is not currently budgeted to fit, but T2 remains an active research route rather than a proven dead route; revisit with changed placement/quantization or >=6 GB usable VRAM.
+- The 16.94 GB/s six-thread Triad is a measured memory benchmark, not measured ternary-kernel efficiency or end-to-end token speed.
+- A 1.3 GB hot-row cache does not imply 2x fewer CPU bytes/token. E3.1 must measure row-use/reuse traces, routing cost, and actual RAM traffic before promoting T3+T4 speed predictions.
+- Valid 10 KiB transfer latency is useful, but does not account for synchronization and 128 layer hops.
+
+### Status / Numbers / Next Experiment
+- Status: Interpretation corrections recorded; baseline remains gated on exact artifact and two runs.
+- Numbers: Triad 16.94 GB/s; hot-row reduction hypothesis unmeasured; 10 KiB round trip 26.2 us before 128-hop accounting.
+- Next Experiment: complete bounded acquisition recovery, then use measured model traces rather than derived hot-row assumptions.
+

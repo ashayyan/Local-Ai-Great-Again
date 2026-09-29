@@ -4,7 +4,7 @@
 
 - Measured GPU VRAM: **4,096 MiB**. T2 whole-model-in-VRAM target (5.3 GB) is dormant on this machine. Revisit trigger: a machine with >=6 GB usable VRAM.
 - Measured pinned H2D at 16 MiB: approximately **1.85 GiB-equivalent MiB/s** in two retained runs. This is below the pre-registered 8 GB/s T1 cross-bus streaming threshold. T1 is rerouted into T3 on this box: draft/verify split across CPU RAM rather than weight streaming across PCIe.
-- Consequence: multicore RAM bandwidth is the single most decision-critical closure number for CPU-resident FFN execution.
+- Consequence: multicore RAM bandwidth is the single most decision-critical closure number for CPU-resident FFN execution. The measured 16.94 GB/s Triad is a memory benchmark, not ternary-kernel efficiency or end-to-end tok/s. A 1.3 GB hot-row cache does not imply 2× fewer CPU bytes/token; E3.1 must measure row-use/reuse traces, routing cost, and actual RAM traffic before promotion. The valid 10 KiB transfer result does not account for synchronization or 128 layer hops.
 
 ## Blocker routes and next experiment
 
