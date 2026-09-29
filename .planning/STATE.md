@@ -13,7 +13,7 @@ progress:
 
 # Project State: Qwen3.8-27B on RTX 3050
 
-**State:** Phase 1/E0 closure execution in progress; structural and hardware probes are partially evidenced, model baseline remains open.
+**State:** E0 EVIDENCED baseline measured; E2.1 offload sweep is the immediate gate before E1 harness work.
 **Mode:** MVP mode.
 **Current stage:** Phase 1 / E0 — hardware truth, baseline, and environment capture.
 **Strict sequence:** E0 → E1 → E2 → E3 → E4.
@@ -21,14 +21,14 @@ progress:
 
 ## Current position
 
-- No experiment is complete and no result is promoted.
-- The immediate next action is the E0 hardware probe and its rerun, followed by the pinned model compatibility inventory.
+- E0 baseline evidence is complete for the IQ3_S bar; the broader quant ladder and clean-checkout reproduction remain open but do not erase the measured bar.
+- The immediate next action is the pre-registered llama-bench offload sweep, followed by MTP confirmation and the E1 agreement-harness scaffold.
 - Baseline-first remains binding for promotion. E3.1 native activation profiling is explicitly resequenced to run in parallel with E2 because it is an independent evidence probe and now gates the T3/T4 hot-row placement design; no sparse optimization is promoted before its >=1,000-token evidence.
 - The full Qwen3.8-27B remains the authoritative generator/verifier; drafts, students, fixtures, and text-only smoke paths cannot substitute for it.
 
 ## Evidence required before advancing
 
-1. **E0:** measured hardware identity/bandwidth, complete artifact compatibility, deterministic stock/reference path, frozen quality suite, stock quantization ladder, and fresh-checkout reproduction.
+1. **E0:** EVIDENCED for the IQ3_S measured baseline bar (1.8 decode / 10.3 prefill); remaining ladder and reproduction items are explicit open work.
 2. **E1:** 200-prompt agreement, authoritative verifier/state correctness, alpha/quality decision, and explicit forks for failed routes.
 3. **E2:** exact sm_86 kernels, AVX2 and transfer accounting, stock-offload then tiered placement traces, and numerical/end-to-end promotion decision.
 4. **E3:** native activation evidence from ≥1,000 tokens, controlled sparse tests, and measured sparsity decision or fallback.
@@ -48,13 +48,13 @@ Every attempt, including failure, must be pre-registered in `experiments/LOG.md`
 
 ## Next experiment
 
-Run the pinned hardware probe (GPU identity/SM/VRAM, driver/CUDA/toolchain, CPU/SIMD, RAM, SSD, PCIe, clocks/power and bandwidth/transfer medians) twice. Then run the deterministic stock/reference smoke path at context ≥2048 where resources permit. Expected output is a measured, rerunnable report and either finite reference outputs or a numerically classified failure with at least two routes and a cheapest command. Do not begin E1 until E0 gates are evidenced.
+Run `llama-bench` at `-ngl 0/8/16/24/99`, `-p 512 -n 128`, two repetitions per point, recording decode/prefill and VRAM telemetry. Then rerun baseline and `--spec-type draft-mtp` twice each at `-n 128 --verbose` to prove or reject MTP engagement. E1 opens after those pre-registered controls.
 
 ## Status / Numbers / Next Experiment
 
-- **Status:** E0 closure remains open; hardware/metadata/fixture evidence exists, but no full-model output has been produced.
-- **Numbers:** 4,096 MiB VRAM; 16 GiB RAM; CPU Triad 16.94 GB/s decimal median (6 threads); pinned H2D ~1.85 GB/s-equivalent at 16 MiB; FFN GEMV unavailable due Numba context IndexError; primary GGUF IQ3_S 12.0 GB, IQ3_XXS 10.9 GB, IQ2_XXS 7.3 GB; Q4 marked unavailable-resource.
-- **Next Experiment:** Acquire/verify official llama.cpp Windows CUDA tooling, repair dedicated D2D and 10 KiB probes, acquire/hash IQ3_S only, and run the two context-2048 stock references; in parallel prepare E3.1 activation hooks on free/borrowed compute.
+- **Status:** E0 **EVIDENCED** for IQ3_S baseline; microprobes, broader quant ladder, and clean-checkout reproduction remain open/non-gating. E1 is opened for harness scaffolding after the requested controls.
+- **Numbers:** IQ3_S exact 12,040,883,104 bytes / SHA `d847e2c1…f3864`; baseline 1.8 decode and 10.3 prefill tok/s; `-ngl 16`, q8_0 KV, ctx 2048, seed 7; 4,096 MiB VRAM; 16 GiB RAM; driver 610.62; Triad 16.94 GB/s.
+- **Next Experiment:** Complete the `llama-bench` offload sweep and paired verbose MTP controls; then run the E1 local 20×128 smoke before requesting free compute.
 
 ## Session
 

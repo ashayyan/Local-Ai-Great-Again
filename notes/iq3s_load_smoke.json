@@ -1,0 +1,8 @@
+{
+    "schema":  "e0-iq3s-load-smoke-v1",
+    "runtime":  "b11259 CUDA13.4",
+    "command":  "llama-cli -m verified IQ3_S --model-draft none --ctx-size 32 --predict 1",
+    "exit_code":  1,
+    "cuda_list":  "none previously",
+    "status":  "failed"
+}

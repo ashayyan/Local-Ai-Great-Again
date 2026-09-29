@@ -2,6 +2,47 @@
 
 Every run records hypothesis, target, command, model, quant, context, VRAM/RAM peaks, prefill/decode speed, quality, script/hash, and Status / Numbers / Next Experiment.
 
+## E0-BASELINE-01 — confirmed supplied run (2026-09-29 UTC)
+- Hypothesis/target: verified IQ3_S at context 2048 produces coherent instruction-following output; establish the measured bar. Target: finite output, decode >=1.8 tok/s and prefill >=10.3 tok/s.
+- Exact configuration: IQ3_S GGUF, `-ngl 16`, `-ctk q8_0 -ctv q8_0`, context 2048, seed 7; runtime b11259 split CUDA 12.4 (`d280808f5`).
+- Result supplied by operator: coherent output with thinking intact; **decode 1.8 tok/s, prefill 10.3 tok/s**. VRAM/RAM peaks were not included and remain unavailable rather than inferred.
+- Artifact: 12,040,883,104 bytes, SHA-256 `d847e2c1e4aa276e4b7b8e9ad7628050e61e165d49ab995407bc36677a6f3864`.
+
+### Status / Numbers / Next Experiment
+- Status: E0 baseline bar measured and promoted as comparison bar.
+- Numbers: 1.8 decode / 10.3 prefill tok/s; IQ3_S; ctx 2048; `ngl=16`; q8_0 KV; seed 7.
+- Next Experiment: repeat baseline twice with `-n 128 --verbose`, then paired MTP control.
+
+## E0-BASELINE-02 — MTP control pending confirmation (2026-09-29 UTC)
+- Hypothesis/target: `--spec-type draft-mtp` improves decode only if native MTP is engaged; target is explicit draft/accept telemetry.
+- Exact configuration supplied: IQ3_S, ctx 2048, seed 7, same KV/offload controls, `--spec-type draft-mtp`; preliminary decode 1.5 tok/s and prefill 4.7 tok/s.
+- Result: not confirmed until both configurations run twice with `-n 128 --verbose` and draft/accept lines are captured.
+
+### Status / Numbers / Next Experiment
+- Status: MTP evidence pending; no dormant classification yet.
+- Numbers: preliminary 1.5 decode / 4.7 prefill tok/s; engagement telemetry absent.
+- Next Experiment: paired verbose repeats; if engaged and slower, mark dormant with revisit trigger GPU-resident ternary draft (T1).
+
+## E0-ROOT-CAUSE-20260929 — CUDA split asset and acquisition
+- CUDA enumeration root cause: primary b11259 lacked cudart/cublas split-asset DLLs; adding `cudart-llama-bin-win-cuda-12.4` fixed initialization. llama-bench reports one RTX 3050, CC 8.6, 4095 MiB VRAM.
+- Acquisition root cause: single connection ~35 KB/s; 16-range aria2 completed the exact artifact at approximately 41 MiB/s transfer display and 28.080344 MiB/s end-to-end including verification.
+- Evidence: `notes/driver_record.json`, `experiments/E0_runtime_cuda124.md`, `experiments/E0_iq3s_routeA.md`, `notes/iq3s_acquisition_routeA.json`.
+
+### Status / Numbers / Next Experiment
+- Status: Root causes recorded; no CUDA claim is made from `--list-devices` alone because working evidence is llama-bench initialization.
+- Numbers: driver 610.62; CC 8.6; 4095 MiB VRAM; exact SHA/bytes; 28.080344 MiB/s end-to-end.
+- Next Experiment: complete offload sweep and paired MTP confirmation.
+
+## E0-E2.1-SWEEP-PREREG — 2026-09-29 UTC
+- Hypothesis/target: decode scales with offloaded GB until RAM-resident bytes dominate. Run `llama-bench` at `-ngl 0/8/16/24/99`, `-p 512 -n 128`, `r=2`, with VRAM telemetry.
+- Fixed model/hash/runtime/context/KV/seed: IQ3_S / `d847e2c1…f3864` / b11259 `d280808f5` CUDA 12.4 split runtime / ctx 2048 / q8_0 KV / seed 7.
+- First point observed: `ngl=0`, pp512 **24.46 ± 1.26 tok/s**; CUDA init found RTX 3050 CC 8.6, 4095 MiB VRAM. Full sweep remains running; no decode result claimed until output is captured.
+
+### Status / Numbers / Next Experiment
+- Status: partial; the isolated `ngl=0` command completed its table but exited 1, so the sweep is not complete.
+- Numbers: `ngl=0`: pp512 **24.46 ± 1.26 tok/s**, tg128 **0.10 ± 0.01 tok/s**; CUDA init found 1 RTX 3050 device, CC 8.6, 4095 MiB VRAM; no peak telemetry.
+- Next Experiment: run `ngl=8/16/24/99` as isolated commands with unique logs and `nvidia-smi` telemetry; diagnose exit code 1 before treating the sweep as complete.
+
 ## E0-HW manual-e0b / manual-e0c — 2026-09-29
 
 - Hypothesis: Windows-native probe identifies actual laptop limits with repeatable medians.

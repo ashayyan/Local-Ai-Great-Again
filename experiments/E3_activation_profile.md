@@ -2,8 +2,8 @@
 
 ## Pre-registration
 
-- **Hypothesis:** Native SiLU/SwiGLU activation magnitudes differ by prompt category; per-layer tails and inactive fractions identify sparsity/precision routes.
-- **Target:** Profile at least **1000 tokens** across instruction, code, reasoning, and factual categories. Report per-layer magnitude distributions (mean, p50/p90/p99/max), top-k absolute-mass (default k=1% and 10%), and inactive fraction (absolute activation <= 1e-3).
+- **Hypothesis:** Native SiLU/SwiGLU activation magnitudes differ by prompt category; per-layer tails, top-k mass, inactive fractions, and consecutive-token reuse identify sparsity/precision routes.
+- **Target:** Profile at least **1000 tokens** across instruction, code, reasoning, and factual categories. Report per-layer magnitude distributions (mean, p50/p90/p99/max), top-k absolute-mass (default k=1% and 10%), inactive fraction (absolute activation <= 1e-3), and consecutive-token row reuse/reuse-distance traces.
 - **Command (free or borrowed compute):**
   `python scripts/s16_activation_profile.py --model <LOCAL_MODEL> --tokenizer <LOCAL_TOKENIZER> --output notes/activation_profile.json`
 - **Routes:** (1) free local Transformers/PyTorch execution; (2) borrowed compute with the same model/tokenizer arguments and output schema; (3) architecture-specific hook adapter if native SiLU/SwiGLU modules are not exposed.

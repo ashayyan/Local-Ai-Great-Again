@@ -3,7 +3,7 @@
 **Mode:** MVP mode — each phase is a smallest useful, observable experiment slice; no experiment is represented as complete until its evidence is logged.
 **Order:** strict `E0 → E1 → E2 → E3 → E4`. A later phase cannot substitute for an unmet earlier gate.
 **Baseline-first rule:** establish hardware truth, loader correctness, frozen quality reference, and stock/reference performance before invention code or custom kernels.
-**Status:** Phase 1/E0 closure in progress. Hardware reroute recorded; stock baseline gate remains open. E3.1 activation profiling is resequenced to run in parallel with E2.
+**Status:** E0 IQ3_S baseline is evidenced at 1.8 decode / 10.3 prefill tok/s. Offload sweep and MTP verbose confirmation remain open; E1 agreement and E3.1 profiling artifacts are scaffolded.
 
 ## Phase map
 

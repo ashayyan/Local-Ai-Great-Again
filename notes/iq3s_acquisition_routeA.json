@@ -1,11 +1,21 @@
-{
-  "schema":"iq3s-acquisition-routeA-v2",
-  "status":"sha256_mismatch_discarded",
-  "expected_bytes":12040883104,
-  "expected_sha256":"d847e2c1e4aa276e4b7b8e9ad7628050e61e165d49ab995407bc36677a6f3864",
-  "observed_bytes":12040883104,
-  "observed_sha256":"172f90b528c1c87f80dd58807771c1f7ce5cdc40632ecded65e311bdafd16565",
-  "route":"aria2 16 connections",
-  "rate_mib_s":45.666588,
-  "note":"Full byte count was reached but digest mismatched; artifact and sidecar were removed. No model load or inference claim. Script now enforces aria2 checksum during future acquisition."
+﻿{
+    "schema":  "iq3s-acquisition-routeA-v1",
+    "route":  "A",
+    "url":  "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF/resolve/main/Qwen3.8-27B-UD-IQ3_S.gguf",
+    "output":  "C:\\Users\\lahd2\\OneDrive\\Desktop\\ai local\\models\\ignored\\Qwen3.8-27B-UD-IQ3_S.gguf",
+    "expected_bytes":  12040883104,
+    "expected_sha256":  "d847e2c1e4aa276e4b7b8e9ad7628050e61e165d49ab995407bc36677a6f3864",
+    "aria2_path":  "C:\\Users\\lahd2\\AppData\\Local\\Microsoft\\WinGet\\Packages\\aria2.aria2_Microsoft.Winget.Source_8wekyb3d8bbwe\\aria2-1.37.0-win-64bit-build1\\aria2c.exe",
+    "started_utc":  "2026-09-29T18:39:29.5391594Z",
+    "finished_utc":  "2026-09-29T18:46:33.9492653Z",
+    "max_seconds":  10800,
+    "connections":  16,
+    "exit_code":  0,
+    "bytes_before":  0,
+    "bytes_after":  12040883104,
+    "bytes_added":  12040883104,
+    "rate_mib_s":  28.080344,
+    "status":  "verified",
+    "sha256":  "d847e2c1e4aa276e4b7b8e9ad7628050e61e165d49ab995407bc36677a6f3864",
+    "resumable_state":  false
 }
