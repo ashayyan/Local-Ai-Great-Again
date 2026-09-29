@@ -1,3 +1,16 @@
+---
+gsd_state_version: "1.0"
+status: unknown
+stopped_at: Phase 0.1 context gathered
+last_updated: "2026-09-29T14:33:25.853Z"
+state_head: 6392c1ffe8bd730cebff9bd1a880371bfdd4db79
+progress:
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+---
+
 # Project State: Qwen3.8-27B on RTX 3050
 
 **State:** Planning complete; execution not started.
@@ -42,3 +55,9 @@ Run the pinned hardware probe (GPU identity/SM/VRAM, driver/CUDA/toolchain, CPU/
 - **Status:** Planning artifacts created; experiments remain unrun.
 - **Numbers:** E0–E4 order; context ≥2048; 50-prompt frozen text suite; 200-prompt E1 agreement; k=4 α≥0.6 promotion and α<0.4 healing branch; ≥1,000 E3 activation tokens; initial quality delta ≤+15% PPL; ≥3 tok/s ambition and ≥5 tok/s project target.
 - **Next Experiment:** E0 hardware probe and deterministic reference smoke test, logged before execution.
+
+## Session
+
+**Last session:** 2026-09-29T14:33:25.819Z
+**Stopped at:** Phase 0.1 context gathered
+**Resume file:** .planning/phases/0.1-hardware-truth/0.1-CONTEXT.md
