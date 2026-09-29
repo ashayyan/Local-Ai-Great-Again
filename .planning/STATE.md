@@ -13,7 +13,7 @@ progress:
 
 # Project State: Qwen3.8-27B on RTX 3050
 
-**State:** Planning complete; execution not started.
+**State:** Phase 1/E0 closure execution in progress; structural and hardware probes are partially evidenced, model baseline remains open.
 **Mode:** MVP mode.
 **Current stage:** Phase 1 / E0 — hardware truth, baseline, and environment capture.
 **Strict sequence:** E0 → E1 → E2 → E3 → E4.
@@ -36,7 +36,7 @@ progress:
 
 ## Active constraints and conditional forks
 
-- Actual VRAM, bandwidth, PCIe, RAM, SSD, power, clocks, driver, CUDA and SIMD are unknown until E0; all research numbers are hypotheses or derived estimates.
+- Measured local hardware: RTX 3050 Laptop, 4,096 MiB VRAM, CC 8.6, i5-11400H 6C/12T, 16 GiB RAM. T2 whole-model-in-VRAM (5.3 GB target) is dormant here with revisit trigger >=6 GB usable VRAM. Pinned H2D ~1.85 GB/s-equivalent is below the 8 GB/s T1 threshold, so T1 merges into T3 CPU-RAM draft/verify. Multicore Triad measured 16.94 GB/s decimal median against a 24 GB/s target; closure probes remain open.
 - If a loader or runtime lacks GDN, MTP, vision, or untied-head correctness, stop the affected comparison and use a pinned compatible runtime, WSL2, or a fixture/fork while recording the missing component.
 - E1 promotion requires k=4 α≥0.6; α<0.4 requires layer-wise healing and remeasurement; intermediate alpha requires a documented comparison.
 - Three failures on one route require a fork or dormant note with a measurable revisit trigger.
@@ -52,9 +52,9 @@ Run the pinned hardware probe (GPU identity/SM/VRAM, driver/CUDA/toolchain, CPU/
 
 ## Status / Numbers / Next Experiment
 
-- **Status:** Planning artifacts created; experiments remain unrun.
-- **Numbers:** E0–E4 order; context ≥2048; 50-prompt frozen text suite; 200-prompt E1 agreement; k=4 α≥0.6 promotion and α<0.4 healing branch; ≥1,000 E3 activation tokens; initial quality delta ≤+15% PPL; ≥3 tok/s ambition and ≥5 tok/s project target.
-- **Next Experiment:** E0 hardware probe and deterministic reference smoke test, logged before execution.
+- **Status:** E0 closure remains open; hardware/metadata/fixture evidence exists, but no full-model output has been produced.
+- **Numbers:** 4,096 MiB VRAM; 16 GiB RAM; CPU Triad 16.94 GB/s decimal median (6 threads); pinned H2D ~1.85 GB/s-equivalent at 16 MiB; FFN GEMV unavailable due Numba context IndexError; primary GGUF IQ3_S 12.0 GB, IQ3_XXS 10.9 GB, IQ2_XXS 7.3 GB; Q4 marked unavailable-resource.
+- **Next Experiment:** Complete all-core/large-block/10 KiB/SSD probes, pin or obtain llama.cpp qwen35/MTP runtime, then run IQ3_S at context 2048 twice or record exact loader/resource failure.
 
 ## Session
 
