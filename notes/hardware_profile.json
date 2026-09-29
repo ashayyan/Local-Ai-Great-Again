@@ -1,0 +1,92 @@
+{
+    "os":  {
+               "value":  {
+                             "Caption":  "Microsoft Windows 11 Pro",
+                             "Version":  "10.0.26200",
+                             "BuildNumber":  "26200"
+                         },
+               "status":  "measured"
+           },
+    "pcie":  {
+                 "value":  null,
+                 "status":  "unavailable"
+             },
+    "errors":  [
+                   {
+                       "status":  "error",
+                       "name":  "pcie",
+                       "message":  "Failed to parse --display/-d flags"
+                   }
+               ],
+    "disk":  {
+                 "value":  {
+                               "Name":  "C",
+                               "Used":  302631927808,
+                               "Free":  207883022336,
+                               "Root":  "C:\\"
+                           },
+                 "status":  "measured"
+             },
+    "ssd":  {
+                "value":  {
+                              "write_mb_s":  63.8223186648371,
+                              "read_mb_s":  137.94815908181707,
+                              "bytes":  1048576
+                          },
+                "status":  "measured"
+            },
+    "timestamp_utc":  "2026-09-29T15:10:36.0611524Z",
+    "gpu_bandwidth":  {
+                          "status":  "unavailable",
+                          "note":  "CUDA copy/GEMV helper not present in this run"
+                      },
+    "schema":  "e0-hardware-v1",
+    "telemetry":  {
+                      "power_source":  2,
+                      "status":  "measured"
+                  },
+    "run_id":  "manual-e0c",
+    "hypothesis":  "Windows-native probe identifies actual laptop limits with repeatable medians",
+    "availability":  {
+                         "cuda_bandwidth":  false,
+                         "nvidia_smi":  true,
+                         "stream":  false
+                     },
+    "script":  "scripts/s01_hardware_probe.ps1",
+    "ram":  {
+                "value":  {
+                              "modules":  2,
+                              "total_bytes":  17179869184
+                          },
+                "status":  "measured"
+            },
+    "cpu_bandwidth":  {
+                          "status":  "unavailable",
+                          "note":  "STREAM helper not present in this run"
+                      },
+    "gpu":  {
+                "value":  {
+                              "vram_total":  "4096",
+                              "compute_capability":  "8.6",
+                              "graphics_clock_mhz":  "555",
+                              "power_limit_w":  "[N/A]",
+                              "memory_clock_mhz":  "810",
+                              "temperature_c":  "54",
+                              "driver":  "610.62",
+                              "name":  "NVIDIA GeForce RTX 3050 Laptop GPU",
+                              "uuid":  "GPU-61921ed7-a1ff-7f09-f4ba-50985e3365c5",
+                              "vram_free":  "3892"
+                          },
+                "status":  "measured"
+            },
+    "numeric_target":  "Two runs; identity stable; repeated bandwidth/transfer samples; explicit unavailable fields",
+    "cpu":  {
+                "value":  {
+                              "max_clock_mhz":  2688,
+                              "name":  "11th Gen Intel(R) Core(TM) i5-11400H @ 2.70GHz",
+                              "cores":  6,
+                              "logical_processors":  12
+                          },
+                "status":  "measured"
+            }
+}
