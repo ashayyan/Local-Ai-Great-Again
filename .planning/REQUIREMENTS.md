@@ -81,8 +81,41 @@
 | E3 — sparsity | REQ-E3-01–03; REQ-LOG-01–03 | Natural activation statistics precede sparse optimization and quality decision. |
 | E4 — VLM and closure | REQ-E4-01–03; REQ-GATE-01–03; REQ-LOG-01–03 | Eviction, full-model multimodal fidelity, speed and fresh-checkout reproduction accepted or explicitly unresolved. |
 
+## Traceability / roadmap coverage
+
+Each v1 requirement is mapped exactly once to one MVP roadmap phase. Shared experiment-contract requirements are split across E0 (definition and clean rerun) and then applied operationally to every later phase without duplicating ownership in the roadmap.
+
+| Requirement | Sole roadmap owner | Observable coverage |
+|---|---|---|
+| REQ-E0-01 | Phase 0.1 | Identity probe and rerun variance |
+| REQ-E0-02 | Phase 0.1 | Bandwidth/transfer/SSD/RAM medians |
+| REQ-E0-03 | Phase 0.2 | Complete artifact manifest and compatibility classification |
+| REQ-E0-04 | Phase 0.3 | Deterministic stock/reference text and multimodal status |
+| REQ-E0-05 | Phase 0.4 | Matched Q4/Q3/Q2 ladder and unsupported evidence |
+| REQ-E0-06 | Phase 0.4 | Frozen 50-prompt and multimodal quality reference |
+| REQ-LOG-01 | Phase 0.1 | Pre-registration schema and unique run IDs |
+| REQ-LOG-02 | Phase 0.5 | Auditable telemetry and failure records |
+| REQ-LOG-03 | Phase 0.5 | Fresh-checkout regeneration |
+| REQ-E1-01 | Phase 1.1 | 200-prompt agreement/alpha harness |
+| REQ-E1-02 | Phase 1.2 | Verifier distribution and GDN/KV reset tests |
+| REQ-E1-03 | Phase 1.3 | Alpha gates and explicit decision |
+| REQ-E1-04 | Phase 1.3 | Numeric forks/dormant triggers |
+| REQ-E2-01 | Phase 2.1 | sm_86 representative kernels |
+| REQ-E2-02 | Phase 2.2 | AVX2 split and transfer accounting |
+| REQ-E2-03 | Phase 2.3 | Stock offload and tiered paging traces |
+| REQ-E2-04 | Phase 2.4 | Numerical/quality/end-to-end promotion |
+| REQ-E3-01 | Phase 3.1 | Native activation statistics |
+| REQ-E3-02 | Phase 3.2 | Controlled sparse placement/paging |
+| REQ-E3-03 | Phase 3.3 | Sparse promotion or measured fallback |
+| REQ-E4-01 | Phase 4.1 | Native visual prefill |
+| REQ-E4-02 | Phase 4.2 | Telemetry-proven eviction and state preservation |
+| REQ-E4-03 | Phase 4.3 | Pruning/recovery category comparison |
+| REQ-GATE-01 | Phase 4.4 | Full-model fixed-suite quality |
+| REQ-GATE-02 | Phase 4.4 | Separate speed, latency and memory acceptance |
+| REQ-GATE-03 | Phase 4.5 | E0→E4 decision-gate record |
+
 ## Status / Numbers / Next Experiment
 
-- **Status:** v1 requirements are specified as testable gates in E0→E4 order; no local run is represented as completed. v2 prototypes and out-of-scope substitutions are explicit.
+- **Status:** v1 requirements are specified as testable gates in E0→E4 order; roadmap/state artifacts now assign every v1 ID exactly once. No local run is represented as completed. v2 prototypes and out-of-scope substitutions remain explicit.
 - **Numbers:** Context ≥2048; fixed text suite 50 prompts; E1 agreement 200 prompts and k=4 α≥0.6 promotion, α<0.4 healing branch; E3 activation sample ≥1,000 tokens; initial quality target ≤+15% relative PPL; interactive ambition ≥3 and project target ≥5 sustained decode tok/s. Actual VRAM/bandwidth and baseline quality/speed remain unmeasured.
 - **Next Experiment:** E0: run `nvidia-smi --query-gpu=name,compute_cap,driver_version,memory.total --format=csv` and pinned bandwidth/RAM/SSD/PCIe probes, then capture a deterministic stock full-model reference at context 2048. Expected result: measured hardware report, exact command/model SHA, phase-separated timings and memory peaks in `experiments/LOG.md`, or a numerically classified loader/resource failure with two routes and cheapest next test.
