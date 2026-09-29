@@ -181,3 +181,15 @@ Every run records hypothesis, target, command, model, quant, context, VRAM/RAM p
 - Numbers: IQ3_S 12.0 GB, IQ3_XXS 10.9 GB, IQ2_XXS 7.3 GB, Q4 15.4–17.6 GB resource-blocked, 0 weights downloaded, 0 stock outputs.
 - Next Experiment: Pin llama.cpp build/version and test qwen35/MTP capability before IQ3_S acquisition.
 
+## E0-RESEQUENCE-20260929 — Triad consequence and T3/T4 amendment
+
+- New measured fact: six-thread Triad median **16.94 GB/s decimal**, below the >=24 GB/s hypothesis. Derived CPU-side 2.67 GB ternary FFN estimate is approximately **4.5–5.3 tok/s** before MTP at η=0.7–0.85; this is at the 5 tok/s target without margin. It is a derived budget, not model throughput.
+- Architecture amendment: T3 merges with T4. Keep approximately 1.3 GB spare VRAM for hot ternary FFN rows after 2.5-bit GDN/attention/lm_head placement; stream cold rows from RAM. If E3.1 native activation sparsity holds, hypothesized RAM bytes/token reduction is ~2× and ceiling ~8–10 tok/s. No promotion until measured.
+- Resequencing: E3.1 native activation profile (>=1,000 representative tokens) runs in parallel with E2 because it gates memory placement and is independent of E1 alpha. Free/borrowed compute fallback is permitted and must preserve tokenizer/model/runtime hashes.
+- Routes: (1) E2 hot-row/cold-row placement with measured activation masks; (2) keep dense CPU-RAM route and optimize kernels/overlap. Cheapest next experiment: instrument native FFN activations for >=1,000 tokens and report per-layer magnitude/top-k/inactive distributions.
+
+### Status / Numbers / Next Experiment
+- Status: T3/T4 amendment and E3.1 parallel resequencing recorded.
+- Numbers: Triad 16.94 GB/s; target 24 GB/s; derived dense CPU ternary estimate 4.5–5.3 tok/s; sparsity hypothesis 2× RAM-byte reduction and 8–10 tok/s.
+- Next Experiment: E3.1 activation profile in parallel with E2, while E0 stock baseline remains gated on two IQ3_S runs.
+

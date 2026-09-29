@@ -3,7 +3,7 @@
 **Mode:** MVP mode — each phase is a smallest useful, observable experiment slice; no experiment is represented as complete until its evidence is logged.
 **Order:** strict `E0 → E1 → E2 → E3 → E4`. A later phase cannot substitute for an unmet earlier gate.
 **Baseline-first rule:** establish hardware truth, loader correctness, frozen quality reference, and stock/reference performance before invention code or custom kernels.
-**Status:** Planned only. No experiments are complete.
+**Status:** Phase 1/E0 closure in progress. Hardware reroute recorded; stock baseline gate remains open. E3.1 activation profiling is resequenced to run in parallel with E2.
 
 ## Phase map
 
@@ -13,8 +13,8 @@ The installed GSD phase resolver accepts integer phase identifiers. The former d
 |---|---|---|---|---|
 | 1 | E0 | Hardware truth, environment report, model manifest, baseline, fixtures, and reproduction contract | REQ-E0-01–06, REQ-LOG-01–03 | Complete E0 evidence before E1; native failures fork to WSL2 or another labeled route without mixing measurements. |
 | 2 | E1 | Ternary/base agreement harness, authoritative verifier checks, and route-fork record | REQ-E1-01–04 | k=4 α≥0.6 promotes T1; α<0.4 requires healing and remeasurement; three failures require a fork/dormant trigger. |
-| 3 | E2 | sm_86 kernels, AVX2 split, transfer accounting, placement/paging, and promotion decision | REQ-E2-01–04 | Numerical correctness, quality, and repeatable end-to-end improvement must be measured. |
-| 4 | E3 | Native activation evidence, controlled sparse candidates, and sparsity decision | REQ-E3-01–03 | Natural sparsity precedes exploitation; failed quality/speed gates fork to mixed precision or memory tiers. |
+| 3 | E2 | sm_86 kernels, AVX2 split, transfer accounting, placement/paging, and promotion decision | REQ-E2-01–04 | Numerical correctness, quality, and repeatable end-to-end improvement must be measured; runs in parallel with E3.1 evidence only. |
+| 4 | E3 | Native activation evidence, controlled sparse candidates, and sparsity decision | REQ-E3-01–03 | E3.1 activation profiling is resequenced to run in parallel with E2 because it gates T3/T4 hot-row placement; natural sparsity precedes exploitation. |
 | 5 | E4 | Visual prefill, eviction, pruning/recovery, acceptance, and closure record | REQ-E4-01–03, REQ-GATE-01–03 | Full-model text/image quality, performance, and clean-checkout evidence are explicit before closure. |
 
 ## Phase details and observable success criteria

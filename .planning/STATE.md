@@ -23,7 +23,7 @@ progress:
 
 - No experiment is complete and no result is promoted.
 - The immediate next action is the E0 hardware probe and its rerun, followed by the pinned model compatibility inventory.
-- Baseline-first is binding: no custom kernel, model surgery, speculative speed claim, sparsity optimization, or multimodal pruning work advances ahead of its prerequisite gate.
+- Baseline-first remains binding for promotion. E3.1 native activation profiling is explicitly resequenced to run in parallel with E2 because it is an independent evidence probe and now gates the T3/T4 hot-row placement design; no sparse optimization is promoted before its >=1,000-token evidence.
 - The full Qwen3.8-27B remains the authoritative generator/verifier; drafts, students, fixtures, and text-only smoke paths cannot substitute for it.
 
 ## Evidence required before advancing
@@ -54,7 +54,7 @@ Run the pinned hardware probe (GPU identity/SM/VRAM, driver/CUDA/toolchain, CPU/
 
 - **Status:** E0 closure remains open; hardware/metadata/fixture evidence exists, but no full-model output has been produced.
 - **Numbers:** 4,096 MiB VRAM; 16 GiB RAM; CPU Triad 16.94 GB/s decimal median (6 threads); pinned H2D ~1.85 GB/s-equivalent at 16 MiB; FFN GEMV unavailable due Numba context IndexError; primary GGUF IQ3_S 12.0 GB, IQ3_XXS 10.9 GB, IQ2_XXS 7.3 GB; Q4 marked unavailable-resource.
-- **Next Experiment:** Complete all-core/large-block/10 KiB/SSD probes, pin or obtain llama.cpp qwen35/MTP runtime, then run IQ3_S at context 2048 twice or record exact loader/resource failure.
+- **Next Experiment:** Acquire/verify official llama.cpp Windows CUDA tooling, repair dedicated D2D and 10 KiB probes, acquire/hash IQ3_S only, and run the two context-2048 stock references; in parallel prepare E3.1 activation hooks on free/borrowed compute.
 
 ## Session
 
