@@ -13,7 +13,7 @@ progress:
 
 # Project State: Qwen3.8-27B on RTX 3050
 
-**State:** E0 baseline and offload sweep are evidenced/classified; E0 closure queue remains active for clean ngl=0 prerequisite and MTP telemetry. E1/E3.1 artifacts are armed/scaffolded.
+**State:** E0 is evidenced with IQ3_S quality bar and IQ2_XXS fit control; E1 is open for the RAM-bounded one-shard smoke. Clean ngl=0 is retired; IQ2 MTP is blocked by missing MTP layers; E3.1 remains scaffolded.
 **Mode:** MVP mode.
 **Current stage:** Phase 1 / E0 — hardware truth, baseline, and environment capture.
 **Strict sequence:** E0 → E1 → E2 → E3 → E4.
@@ -21,14 +21,14 @@ progress:
 
 ## Current position
 
-- E0 baseline evidence is complete for the IQ3_S bar; the broader quant ladder and clean-checkout reproduction remain open but do not erase the measured bar.
-- The immediate next action is the pre-registered llama-bench offload sweep, followed by MTP confirmation and the E1 agreement-harness scaffold.
+- E0 baseline evidence is complete for the IQ3_S bar; IQ2_XXS is a fit control only. The broader quant ladder and clean-checkout reproduction remain open.
+- E1 is armed with `scripts/s10_e1_layer_smoke.py`; it must stream one verified BF16 shard, stop before 8 GiB RSS, and report FFN fake-quant MSE. The 20-prompt alpha run belongs on Kaggle/TPU.
 - Baseline-first remains binding for promotion. E3.1 native activation profiling is explicitly resequenced to run in parallel with E2 because it is an independent evidence probe and now gates the T3/T4 hot-row placement design; no sparse optimization is promoted before its >=1,000-token evidence.
 - The full Qwen3.8-27B remains the authoritative generator/verifier; drafts, students, fixtures, and text-only smoke paths cannot substitute for it.
 
 ## Evidence required before advancing
 
-1. **E0:** EVIDENCED for the IQ3_S measured baseline bar (1.8 decode / 10.3 prefill); remaining ladder and reproduction items are explicit open work.
+1. **E0:** EVIDENCED for IQ3_S quality bar and IQ2_XXS fit control; clean ngl=0 retired, IQ2 MTP blocked, ngl=99 classified overflow evidence.
 2. **E1:** 200-prompt agreement, authoritative verifier/state correctness, alpha/quality decision, and explicit forks for failed routes.
 3. **E2:** exact sm_86 kernels, AVX2 and transfer accounting, stock-offload then tiered placement traces, and numerical/end-to-end promotion decision.
 4. **E3:** native activation evidence from ≥1,000 tokens, controlled sparse tests, and measured sparsity decision or fallback.
@@ -52,9 +52,9 @@ Run `llama-bench` at `-ngl 0/8/16/24/99`, `-p 512 -n 128`, two repetitions per p
 
 ## Status / Numbers / Next Experiment
 
-- **Status:** E0 **EVIDENCED-IN-PROGRESS-CLOSURE** for IQ3_S baseline and classified offload sweep. Clean ngl=0 prerequisite was not met (6.88 GiB free vs >13 GiB target); MTP telemetry remains pending. E1/E3.1 scaffolds and compute request are authored.
-- **Numbers:** IQ3_S exact 12,040,883,104 bytes / SHA `d847e2c1…f3864`; baseline 1.8 decode and 10.3 prefill tok/s; `-ngl 16`, q8_0 KV, ctx 2048, seed 7; 4,096 MiB VRAM; 16 GiB RAM; driver 610.62; Triad 16.94 GB/s.
-- **Next Experiment:** Complete the `llama-bench` offload sweep and paired verbose MTP controls; then run the E1 local 20×128 smoke before requesting free compute.
+- **Status:** E0 **EVIDENCED** for IQ3_S quality bar and IQ2_XXS fit control; E1 opened for the one-shard smoke. Clean ngl=0 is retired, IQ2 MTP is blocked, and ngl=99 is classified VRAM-overflow evidence.
+- **Numbers:** IQ3_S 1.8 decode / 10.3 prefill; IQ2 2.64 ± 0.02 bench decode / 2.4 interactive generation / 214.96 ± 3.50 bench prefill; 16.94 GB/s Triad; 3.8 GB/token needed at 5 tok/s; normal free RAM 7–8 GiB; CPU AVX2/AVX-512/BMI2.
+- **Next Experiment:** Verify one BF16 shard, then run `python scripts/s10_e1_layer_smoke.py <shard>`; never load the full 55.6 GB BF16 model locally.
 
 ## Session
 

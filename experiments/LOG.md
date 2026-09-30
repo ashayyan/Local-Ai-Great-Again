@@ -2,6 +2,30 @@
 
 Every run records hypothesis, target, command, model, quant, context, VRAM/RAM peaks, prefill/decode speed, quality, script/hash, and Status / Numbers / Next Experiment.
 
+## E0-IQ2-FIT-CONTROL — final measured ledger entry
+
+- **Hypothesis/target:** IQ2_XXS provides a smaller fit control and may improve decode under the same `ngl=16`, context-2048 setup; it does not replace the IQ3_S quality bar. Bench and interactive prefill are separate evidence classes.
+- **Artifact:** `Qwen3.8-27B-UD-IQ2_XXS.gguf`, 7,266,070,528 bytes, 6.76 GiB, 26.90 B parameters, 2.0625 bpw.
+- **Bench:** `ngl=16`, `pp512/tg128`, r=2: **214.96 ± 3.50 prefill**, **2.64 ± 0.02 decode tok/s**.
+- **Interactive:** same prompt/seed/ngl: **17.2 prompt tok/s**, **2.4 generation tok/s**.
+- **Derived constraint:** decode reads about 17–19 GB/s, matching the measured 16.94 GB/s multicore Triad. At 5 tok/s, approximately 3.8 GB must be read per token. IQ2's 6.76 GiB is a fit control, not the complete system.
+
+### Status / Numbers / Next Experiment
+- **Status:** IQ2 fit control recorded; IQ3_S remains the quality/performance bar.
+- **Numbers:** 2.64 ± 0.02 bench decode; 2.4 interactive generation; 214.96 ± 3.50 bench prefill; 17.2 interactive prompt; 7.266 GB artifact.
+- **Next Experiment:** E1 one-shard group-128 absmean ternary smoke under an 8 GiB RAM ceiling.
+
+## E0-MACHINE-CONSTRAINT-CLOSURE — final classifications
+
+- Normal Windows free RAM floor is about 7–8 GiB. The requested >13 GiB clean `ngl=0` control is **RETIRED**, not failed, because IQ3_S is 11.2 GiB and cannot be fully resident.
+- MTP on IQ2_XXS is **BLOCKED** with exact error: `context type MTP requested but model doesn't contain MTP layers.` The 26.90 B vs 27.32 B parameter gap supports the classification. Revisit only with a separate MTP-only GGUF passed via `--spec-draft-model`; do not retry `--spec-type draft-mtp` on IQ2_XXS.
+- `ngl=99` is VRAM-overflow evidence, not an open crash: exit `-1073740791`, CUDA error at `ggml-cuda.cu:109`.
+
+### Status / Numbers / Next Experiment
+- **Status:** E0 fit and runtime anomalies classified; E1 is opened with a RAM-bounded local smoke.
+- **Numbers:** normal free RAM 7–8 GiB; IQ3_S 11.2 GiB; MTP exact error; `ngl=99` exit `-1073740791`.
+- **Next Experiment:** execute `scripts/s10_e1_layer_smoke.py` only after one BF16 shard is verified; no local 20-prompt alpha run.
+
 ## E0-CLEAN-NGL0-20260930 — prerequisite failure
 
 - Hypothesis/target: with browsers and heavy processes closed and >13 GiB free RAM, a clean `ngl=0` bench separates CPU random-access cost from page thrash.

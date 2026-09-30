@@ -32,10 +32,11 @@ T3+T4 are merged: approximately 2.5-bit GDN/attention/head weights remain on GPU
 
 ## Status board
 
-- **E0:** `EVIDENCED-IN-PROGRESS-CLOSURE`; IQ3_S baseline bar established, offload sweep classified, clean control and MTP confirmation pending.
-- **E1/E3.1:** scaffolded.
+- **E0:** `EVIDENCED`; IQ3_S quality bar remains 1.8 decode / 10.3 prefill tok/s. IQ2_XXS is recorded as a fit control at 2.64 ± 0.02 bench decode / 2.4 interactive generation. Clean `ngl=0` >13 GiB control is retired because normal free RAM is about 7–8 GiB; `ngl=99` is classified VRAM-overflow evidence.
+- **E1:** opened with a RAM-bounded one-shard group-128 absmean ternary smoke; no local alpha run.
+- **E3.1:** scaffolded.
 - **Compute request:** authored for Kaggle T4×2 and TPU Research Cloud.
-- **MTP:** preliminary result recorded; explicit draft/accept telemetry confirmation pending.
+- **MTP:** IQ2_XXS is blocked by the exact missing-MTP-layers error; revisit only with a separate MTP-only GGUF via `--spec-draft-model`.
 
 ## Rules
 
