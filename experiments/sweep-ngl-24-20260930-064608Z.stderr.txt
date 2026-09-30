@@ -1,0 +1,5 @@
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 4095 MiB):
+  Device 0: NVIDIA GeForce RTX 3050 Laptop GPU, compute capability 8.6, VMM: yes, VRAM: 4095 MiB
+load_backend: loaded CUDA backend from C:\lab\ailocal\runtimes\llama-b11259-cuda124\ggml-cuda.dll
+load_backend: loaded RPC backend from C:\lab\ailocal\runtimes\llama-b11259-cuda124\ggml-rpc.dll
+load_backend: loaded CPU backend from C:\lab\ailocal\runtimes\llama-b11259-cuda124\ggml-cpu-icelake.dll

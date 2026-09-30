@@ -1,0 +1,10 @@
+﻿{
+    "ngl":  16,
+    "started_utc":  "20260930-064148Z",
+    "elapsed_s":  258.0544031,
+    "exit_code":  null,
+    "peak_working_set_bytes":  8667734016,
+    "stdout":  "C:\\lab\\ailocal\\experiments\\sweep-ngl-16-20260930-064148Z.stdout.txt",
+    "stderr":  "C:\\lab\\ailocal\\experiments\\sweep-ngl-16-20260930-064148Z.stderr.txt",
+    "dmon":  "C:\\lab\\ailocal\\experiments\\sweep-ngl-16-20260930-064148Z.dmon.csv"
+}

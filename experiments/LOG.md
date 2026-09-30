@@ -2,6 +2,18 @@
 
 Every run records hypothesis, target, command, model, quant, context, VRAM/RAM peaks, prefill/decode speed, quality, script/hash, and Status / Numbers / Next Experiment.
 
+## E0-MACHINE-LAW — 2026-09-29 UTC
+
+"RAM residency, not VRAM, is the binding constraint: working set >~10 GiB
+evicts model pages and decode collapses from RAM speed (~16.9 GB/s) to SSD
+speed (~0.95 GB/s). Evidence: ngl=0 tg128 = 0.10 t/s thrash vs ngl=16
+tg(interactive) = 1.8 t/s. Design consequence: every future system's
+RAM-resident streamed weights must stay ≤ 2.7 GB — exactly what T3's
+ternary CPU FFN (2.67 GB) assumes. This measurement independently
+validates the T3 architecture."
+
+Status / Numbers / Next Experiment: This law is recorded as a design constraint for all later phases. Isolated points produced: ngl=8 pp512 53.56 ± 40.17 and tg128 0.65 ± 0.30 tok/s, 10.36 GB peak working set, dmon FB max 2802 MB; ngl=16 pp512 109.23 ± 24.39 and tg128 1.24 ± 0.07 tok/s, 8.67 GB peak working set. ngl=24 is classified as prolonged no-output termination. ngl=99 is classified as hard failure: exit `-1073740791`, CUDA error at `ggml-cuda.cu:109` after backend initialization. The requested sweep points are now classified; clean ngl=0, exit diagnosis, and MTP pair remain pending.
+
 ## E0-BASELINE-01 — confirmed supplied run (2026-09-29 UTC)
 - Hypothesis/target: verified IQ3_S at context 2048 produces coherent instruction-following output; establish the measured bar. Target: finite output, decode >=1.8 tok/s and prefill >=10.3 tok/s.
 - Exact configuration: IQ3_S GGUF, `-ngl 16`, `-ctk q8_0 -ctv q8_0`, context 2048, seed 7; runtime b11259 split CUDA 12.4 (`d280808f5`).
