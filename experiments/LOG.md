@@ -2,6 +2,26 @@
 
 Every run records hypothesis, target, command, model, quant, context, VRAM/RAM peaks, prefill/decode speed, quality, script/hash, and Status / Numbers / Next Experiment.
 
+## E0-CLEAN-NGL0-20260930 — prerequisite failure
+
+- Hypothesis/target: with browsers and heavy processes closed and >13 GiB free RAM, a clean `ngl=0` bench separates CPU random-access cost from page thrash.
+- Exact pre-run evidence: `PRERUN_FREE_GIB=6.88`; target was >13 GiB, so the prerequisite was not met. The run was terminated after the bounded window; artifacts are `experiments/ngl0-clean-20260930.*`.
+- Status: failed prerequisite, no clean CPU number claimed. Route A: free RAM by closing additional resident processes/services and rerun; Route B: use a separately labeled smaller/streamed fixture. Cheapest next experiment: inventory top working-set processes and retry only after measured free RAM exceeds 13 GiB.
+
+### Status / Numbers / Next Experiment
+- **Status:** Clean control remains pending; no result promoted.
+- **Numbers:** required >13 GiB free; observed 6.88 GiB.
+- **Next Experiment:** reclaim RAM and rerun once the numeric prerequisite is met.
+
+## INFRA-REPO-MIGRATION-20260930 — infrastructure event
+
+Repository origin was migrated to `https://github.com/ashayyan/Local-Ai-Great-Again.git` after a history scrub removed runtimes and model artifacts. Runtimes/models remain untracked by design. This changes repository infrastructure only; no experiment semantics, measurements, or conclusions changed.
+
+### Status / Numbers / Next Experiment
+- **Status:** Infrastructure migration verified with `git remote -v`; no experiment result changed.
+- **Numbers:** origin fetch/push both point to `ashayyan/Local-Ai-Great-Again.git`.
+- **Next Experiment:** Continue E0 closure from the preserved local artifacts.
+
 ## E0-MACHINE-LAW — 2026-09-29 UTC
 
 "RAM residency, not VRAM, is the binding constraint: working set >~10 GiB
