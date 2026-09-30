@@ -30,23 +30,8 @@ result: pass
 
 ### 5. Inspect E0 reproduction check
 expected: The reproduction check reports structural orchestration status separately from a genuine clean-checkout/full-model reproduction and does not claim E0 completion from scaffolding alone.
-result: pending
-
-### 2. Inspect model artifact manifest
-expected: The manifest clearly reports missing model artifacts and unresolved compatibility instead of fabricating hashes or claiming complete model support.
-result: pending
-
-### 3. Inspect stock baseline availability result
-expected: The stock baseline record is a structured blocked-no-weights result at context 2048, with no invented throughput, memory peak, or quality output.
-result: pending
-
-### 4. Inspect frozen quality fixtures
-expected: The quality package contains 50 evaluation prompts, 5 disjoint calibration prompts, and 4 hashed image fixtures, while unmeasured model scoring remains explicitly unclaimed.
-result: pending
-
-### 5. Inspect E0 reproduction check
-expected: The reproduction check reports structural orchestration status separately from a genuine clean-checkout/full-model reproduction and does not claim E0 completion from scaffolding alone.
 result: pass
+
 
 ## Summary
 
