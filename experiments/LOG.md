@@ -45,6 +45,15 @@ Status / Numbers / Next Experiment: This law is recorded as a design constraint 
 - Numbers: 1.8 decode / 10.3 prefill tok/s; IQ3_S; ctx 2048; `ngl=16`; q8_0 KV; seed 7.
 - Next Experiment: repeat baseline twice with `-n 128 --verbose`, then paired MTP control.
 
+## E0-MTP-RUN-STATUS — interrupted control sequence
+
+The attempted four-run sequence produced only `experiments/raw/mtp-base-1.txt` before disconnect. Its verbose record reports prompt 10.1311 t/s, generation 1.48825 t/s, 115 predicted tokens, seed 7, and `speculative.types: none`. No MTP raw artifact exists, so MTP remains unclassified.
+
+### Status / Numbers / Next Experiment
+- **Status:** Incomplete, no MTP claim.
+- **Numbers:** one baseline control: 1.48825 decode / 10.1311 prompt t/s.
+- **Next Experiment:** rerun the remaining baseline and both MTP controls separately, requiring draft/accept lines.
+
 ## E0-BASELINE-02 — MTP control pending confirmation (2026-09-29 UTC)
 - Hypothesis/target: `--spec-type draft-mtp` improves decode only if native MTP is engaged; target is explicit draft/accept telemetry.
 - Exact configuration supplied: IQ3_S, ctx 2048, seed 7, same KV/offload controls, `--spec-type draft-mtp`; preliminary decode 1.5 tok/s and prefill 4.7 tok/s.
