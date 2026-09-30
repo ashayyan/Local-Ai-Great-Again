@@ -13,3 +13,6 @@
 /experiments/raw/runtime-validation/
 /notes/hf_route_tests/**/*.bin
 /notes/hf_route_tests/hf-home-*/
+
+runtimes/
+models/
