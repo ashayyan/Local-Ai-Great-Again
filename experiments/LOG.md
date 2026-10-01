@@ -409,3 +409,145 @@ The attempted four-run sequence produced only `experiments/raw/mtp-base-1.txt` b
 - Numbers: 12,040,883,104 bytes, 45.666588 MiB/s, expected SHA d847e2..., observed SHA 172f90..., verified bytes 0.
 - Next Experiment: checksum-enforced resumable acquisition from an immutable revision or trusted cache.
 
+## E1-SHARD-SMOKE-20260930 — measured
+- Hypothesis/target: one verified BF16 shard can be group-128 absmean fake-quantized without crossing the 8 GiB RSS ceiling and without loading the full checkpoint.
+- Result: measured. Shard 66a8888c9a4bad0b8e450c82effb3f79d57ba20f1d85cc9108175e94ac140de8. 16 FFN tensors, layers 10–14 complete, layer 15 only gate_proj. 6.81 s. torch 2.14.1+cpu. group 128, 8 tokens, hidden 5120.
+- Numbers: down_proj output MSE 0.534–0.547; gate_proj 0.162–0.167; up_proj 0.155–0.159. Per-tensor RSS high-water 3.52 GB. JSON peak_rss_bytes 542 MB is invalid on this Windows run.
+- Not claimed: agreement alpha, full-model load, remaining 17 shards, quality pass.
+- Next Experiment: E1 agreement remains unmeasured. Do not open E2. The next slice is the pre-registered remote agreement handoff, not another local weight load.
+
+## E0-METADATA-ONLY-1D4BF0F-20261001 — measured inventory
+
+- Hypothesis/target: an isolated no-weight metadata directory records revision `1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0` as `pinned-sha-input-unverified`, SHA-256 for present small metadata files only, and script status `missing` for absent weight classes. Target: 0 weight bytes downloaded and 0 weight files hashed.
+- Exact commands: `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\s02_fetch_metadata.ps1 -Revision 1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0 -ModelPath notes\e0-metadata-1d4bf0f`; `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\s02_model_manifest.ps1 -ModelPath notes\e0-metadata-1d4bf0f -Output models\qwen3.8-27b-manifest.json -Revision 1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0 -Offline`.
+- Result: the metadata directory was absent before fetch, so it held no matching weight files. Both commands completed; the manifest reports 7 present metadata files, `source_revision_status=pinned-sha-input-unverified`, `compatibility.status=unverified`, 1 index listing 1,199 tensors across 18 shards, and all 18 indexed shards absent from this isolated directory. The script's component status `missing` applies to language, embeddings, GDN, attention, vision, tokenizer, and MTP; processor status is `present` for its metadata. Here `missing` means requirement-unavailable for this run, not a fabricated checksum or complete component support. `tokenizer_revision` and `processor_revision` remain `unresolved`.
+- Present-file SHA-256: `chat_template.jinja` c3cf9e34abf4f9e36c2d72165aa9c132d3e2a725b6c2586aaa3a8af9d7a81041; `config.json` 191e0af232104ed8b65258cf3fb2b842e288008baca7633c11b82a1ac7203aab; `generation_config.json` e70c136c1b78ddc1fb0905bac8e733a4dc448d4f852a5dd75143fffc70be550e; `model.safetensors.index.json` 77042094076611b69791a610065f28b7013b8c621795fa86ddccc8bac7d1b9df; `preprocessor_config.json` 27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516; `tokenizer_config.json` b11349aafa7cdc6a320767cf7ceb29ed82f7eda5d65e8e0819e76f0ce947bf27; `video_preprocessor_config.json` 7768af27c1fafa9cc9011c1dc20067e03f8915e03b63504550e11d5066986d13.
+
+### Status / Numbers / Next Experiment
+- **Status:** Metadata-only inventory measured; REQ-E0-03 remains partial and E0 is not complete. No model load or weight hash claimed.
+- **Numbers:** 7 present metadata files with SHA-256; 0 weight bytes downloaded; 0 weight files hashed; 18/18 indexed shards absent from this directory.
+- **Next Experiment:** On a separately approved metadata-only path, pin and record tokenizer/processor revisions and acquire missing tokenizer/processor metadata if available; expected result is a revised manifest with verifiable metadata provenance while absent weights remain explicitly `missing`. Do not start 01-07 or 01-08 from this entry.
+
+## E0-IQ3S-RERUN-20261001-120443 — measured recovered-command rerun
+
+- Hypothesis/target: at context 2048, the recovered IQ3_S command stays near the previously supplied 1.8 decode / 10.3 prefill tok/s bar with non-null GPU-memory and process working-set peaks. One run, `-n 128`; target 0 weight bytes downloaded. This is a new measurement, not proof that PSReadLine history lines 725–733 produced the old 1.8/10.3 packet.
+- Exact command (working directory `C:\lab\ailocal\runtimes\llama-b11259-cuda124`): `.\llama-cli.exe -m "C:\lab\ailocal\models\Qwen3.8-27B-UD-IQ3_S.gguf" -p "Write three sentences about why the sky is blue." -n 128 --seed 7 -c 2048 -ngl 16 -ctk q8_0 -ctv q8_0`. Command source: PSReadLine history lines 725–733; those lines are not tied to the original 1.8/10.3 result.
+- Evidence: `experiments/raw/iq3-rerun/stdout.txt` (prompt 13.6 tok/s, generation 2.1 tok/s; answer followed by an interactive `>` prompt before process exit); `experiments/raw/iq3-rerun/sampler.jsonl` (2,355 samples at approximately one-second intervals). Sampler command: not recorded in these artifacts; no exact sampler command is claimed. After exit, GPU memory used was 72 MiB as supplied in the run handoff.
+- Artifact/configuration: `C:\lab\ailocal\models\Qwen3.8-27B-UD-IQ3_S.gguf`, length checked at 12,040,883,104 bytes, not rehashed; context 2048, `-n 128`, seed 7, `-ngl 16`, q8_0 K/V. No weight download performed (0 bytes).
+
+### Status / Numbers / Next Experiment
+- **Status:** New recovered-command IQ3_S measurement recorded; not the original 1.8/10.3 packet. REQ-E0-03 remains partial and E0 remains open.
+- **Numbers:** prompt/prefill 13.6 tok/s; generation/decode 2.1 tok/s; sampled GPU memory-used peak 3,828 MiB (device-wide); sampled `llama-cli` working-set peak 10,486,272,000 bytes; 2,355 samples; post-exit GPU memory used 72 MiB; weight bytes downloaded 0.
+- **Next Experiment:** With separate authorization, capture a bounded non-interactive baseline and an exact recorded sampler command so peaks and completion can be independently reproduced; do not start 01-07 or 01-08 in this session.
+
+## E0-IQ3S-SINGLE-TURN-20261001 — measured exit control
+
+- Hypothesis/target: with only `--single-turn` added to the recovered IQ3_S command, prompt stays near 13.6 tok/s and generation near 2.1 tok/s at context 2048; the process exits after one answer. Target: 0 `llama-cli` processes after exit and GPU memory near the previous 72 MiB idle reading. Help confirmed `--single-turn` runs one turn and exits.
+- Exact model command (working directory `C:\lab\ailocal\runtimes\llama-b11259-cuda124`): `.\llama-cli.exe -m "C:\lab\ailocal\models\Qwen3.8-27B-UD-IQ3_S.gguf" -p "Write three sentences about why the sky is blue." -n 128 --seed 7 -c 2048 -ngl 16 -ctk q8_0 -ctv q8_0 --single-turn`. No change to model, prompt, token count, seed, context, GPU layers, or KV types. Preflight: 0 `llama-cli` processes and 44.71% RAM used.
+- Exact sampler command (parent PowerShell 1-second job body, writing `experiments/raw/iq3-rerun-exit/sampler.jsonl`): `$sampler=Start-Job -ArgumentList $samplePath -ScriptBlock {param($path); while($true){ $gpuText=& nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits 2>$null; $gpuMiB=$null; if("$gpuText" -match '(\d+)'){$gpuMiB=[int64]$Matches[1]}; $ps=@(Get-Process -Name 'llama-cli' -ErrorAction SilentlyContinue); $ws=$null; if($ps.Count -gt 0){$ws=($ps | Measure-Object -Property WorkingSet64 -Maximum).Maximum}; [pscustomobject]@{utc=(Get-Date).ToUniversalTime().ToString('o');gpu_memory_used_mib=$gpuMiB;llama_cli_workingset_bytes=$ws} | ConvertTo-Json -Compress | Add-Content -LiteralPath $path; Start-Sleep -Seconds 1} }`; after the run, `Stop-Job $sampler; Receive-Job $sampler | Out-Null; Remove-Job $sampler`.
+- Evidence: `experiments/raw/iq3-rerun-exit/stdout.txt`, `experiments/raw/iq3-rerun-exit/stderr.txt`, and `experiments/raw/iq3-rerun-exit/sampler.jsonl`. Command exit 0; stdout reports `[ Prompt: 11.4 t/s | Generation: 1.8 t/s ]`. Sampler recorded 69 samples, device-wide GPU memory-used peak 3,802 MiB, and `llama-cli` working-set peak 9,820,696,576 bytes. After exit: 0 `llama-cli` processes and device memory 73 MiB. No download command was run.
+
+### Status / Numbers / Next Experiment
+- **Status:** One-turn exit control measured; exit target met. The lower 11.4/1.8 tok/s speeds are new measurements, not the previous 13.6/2.1 run or original 1.8/10.3 packet. REQ-E0-03 remains partial; E0 remains open.
+- **Numbers:** context 2048; `-n 128`; prompt 11.4 tok/s; generation 1.8 tok/s; GPU memory peak 3,802 MiB; process working-set peak 9,820,696,576 bytes; 69 samples; 0 processes after exit; idle GPU 73 MiB; weight bytes downloaded 0.
+- **Next Experiment:** Only after separate approval, investigate run-to-run speed variance under matched temperature/power and warm-cache conditions; do not start 01-07 or 01-08 from this control.
+
+- **Second run:** `E0-IQ3S-SINGLE-TURN-20261001` exact command and sampler repeated once under the same working directory. Preflight: 0 `llama-cli` processes, free RAM 9,413,955,584 bytes (44.4% used), idle GPU 74 MiB. Evidence: `experiments/raw/iq3-rerun-exit-2/stdout.txt`, `stderr.txt`, `sampler.jsonl`. Result: exit 0, 68 samples, prompt 11.4 tok/s, generation 1.7 tok/s, GPU peak 3,792 MiB, working-set peak 9,701,924,864 bytes, 0 processes after exit, GPU after exit 66 MiB. Delta versus the 11.4/1.8 run: prompt 0.0 tok/s; generation -0.1 tok/s; GPU peak -10 MiB; working set -118,771,712 bytes. Weight bytes downloaded 0. E0 remains open and REQ-E0-03 remains partial.
+
+## E0-IQ3S-NGL18-20261001 — measured single-turn variation
+
+- Hypothesis/target: change only `-ngl 16` to `-ngl 18` in the 11.4/1.7 command; generation should exceed 1.8 tok/s while GPU peak remains below 4,050 MiB. One run only; no retry authorized.
+- Exact command (working directory `C:\lab\ailocal\runtimes\llama-b11259-cuda124`): `.\llama-cli.exe -m "C:\lab\ailocal\models\Qwen3.8-27B-UD-IQ3_S.gguf" -p "Write three sentences about why the sky is blue." -n 128 --seed 7 -c 2048 -ngl 18 -ctk q8_0 -ctv q8_0 --single-turn`. All other command tokens unchanged. Preflight: 0 `llama-cli` processes, 44.24% RAM used, idle GPU 70 MiB. Evidence: `experiments/raw/iq3-ngl18/stdout.txt`, `stderr.txt`, `sampler.jsonl`; sampler command was the same 1-second sampler recorded in the prior entry.
+- Result: exit 0, 133 samples, 0 `llama-cli` processes after exit, GPU after exit 66 MiB. The process did not crash and GPU peak stayed below the 4,050 MiB stop threshold.
+
+### Status / Numbers / Next Experiment
+- **Status:** Single `-ngl 18` variation measured once; target generation increase was not met. E0 remains open and REQ-E0-03 remains partial. No retry of `-ngl 18`.
+- **Numbers:** prompt 3.2 tok/s; generation 0.8 tok/s; GPU peak 3,895 MiB; working-set peak 9,577,857,024 bytes; delta versus 11.4/1.7 run: prompt -8.2 tok/s; generation -0.9 tok/s; GPU peak +103 MiB; working set -124,067,840 bytes; 0 processes after exit; GPU after exit 66 MiB.
+- **Next Experiment:** Do not retry `-ngl 18` in this route. Keep the measured `-ngl 16` bar as the local comparison and preserve E0 gating; do not start 01-07 or 01-08.
+
+## E0-IQ3S-NGL14-20261001 — measured single-turn variation
+
+- Hypothesis/target: change only `-ngl 16` to `-ngl 14` in the 11.4/1.7 command; generation should be slower than the `-ngl 16` bar but faster than the `-ngl 18` result of 0.8 tok/s, with GPU peak below 3,800 MiB. One run; if generation is below 1.5 tok/s, stop the `-ngl` sweep.
+- Exact command (working directory `C:\lab\ailocal\runtimes\llama-b11259-cuda124`): `.\llama-cli.exe -m "C:\lab\ailocal\models\Qwen3.8-27B-UD-IQ3_S.gguf" -p "Write three sentences about why the sky is blue." -n 128 --seed 7 -c 2048 -ngl 14 -ctk q8_0 -ctv q8_0 --single-turn`. All other command tokens unchanged. Preflight: 0 `llama-cli` processes, 39.86% RAM used, idle GPU 78 MiB. Evidence: `experiments/raw/iq3-ngl14/stdout.txt`, `stderr.txt`, `sampler.jsonl`; sampler command was the same 1-second sampler recorded in the prior entry.
+- Result: exit 0, 117 samples, 0 `llama-cli` processes after exit, GPU after exit 74 MiB. The process did not crash and GPU peak remained below 3,800 MiB.
+
+### Status / Numbers / Next Experiment
+- **Status:** Single `-ngl 14` variation measured once; generation was below the 1.5 tok/s stop threshold, so the `-ngl` sweep is stopped. E0 remains open and REQ-E0-03 remains partial.
+- **Numbers:** prompt 5.7 tok/s; generation 0.9 tok/s; GPU peak 3,475 MiB; working-set peak 10,167,472,128 bytes; delta versus 11.4/1.7 run: prompt -5.7 tok/s; generation -0.8 tok/s; GPU peak -317 MiB; working set +465,547,264 bytes; 0 processes after exit; GPU after exit 74 MiB.
+- **Next Experiment:** Keep `-ngl 16` as the canonical local bar; do not retry `-ngl 18`, do not continue the `-ngl` sweep, and do not start 01-07 or 01-08.
+
+## E0-IQ3S-THREAD-DISCOVERY-20261001 — measured, count not found
+
+- Hypothesis/target: run the unchanged 11.4/1.7 command through `cmd.exe /c` with stdout and stderr captured separately; stderr was expected to expose an `n_threads` line. One run only; no `-t` or `--threads` flag added.
+- Exact command: `cmd.exe /c '.\llama-cli.exe -m "C:\lab\ailocal\models\Qwen3.8-27B-UD-IQ3_S.gguf" -p "Write three sentences about why the sky is blue." -n 128 --seed 7 -c 2048 -ngl 16 -ctk q8_0 -ctv q8_0 --single-turn > "C:\lab\ailocal\experiments\raw\iq3-threads-discover\stdout.txt" 2> "C:\lab\ailocal\experiments\raw\iq3-threads-discover\stderr.txt"'`, working directory `C:\lab\ailocal\runtimes\llama-b11259-cuda124`. Same 1-second sampler as the 11.4/1.7 run. Preflight: 0 `llama-cli` processes, 39.93% RAM used, idle GPU 82 MiB.
+- Result: exit 0. `stdout.txt` reports prompt 11.2 tok/s and generation 1.7 tok/s. `stderr.txt` contains no `n_threads` or thread-count line. Thread count: **not-found**; no count invented. Evidence: `experiments/raw/iq3-threads-discover/stdout.txt`, `stderr.txt`, `sampler.jsonl`; sampler recorded 68 samples, GPU peak 3,792 MiB and working-set peak 10,357,649,408 bytes.
+
+### Status / Numbers / Next Experiment
+- **Status:** Thread-count discovery completed; n_threads line not found. No new thread count selected or tested. E0 remains open and REQ-E0-03 remains partial.
+- **Numbers:** prompt 11.2 tok/s; generation 1.7 tok/s; GPU peak 3,792 MiB; working-set peak 10,357,649,408 bytes; 68 samples; exit 0; no thread count reported.
+- **Next Experiment:** Do not launch a thread-count variation without a separately recorded default thread count; do not start 01-07 or 01-08.
+
+## E0-IQ3S-HASH-20261001 — measured artifact identity
+
+- Path: `C:\lab\ailocal\models\Qwen3.8-27B-UD-IQ3_S.gguf`
+- Bytes: `12040883104`
+- SHA-256: `d847e2c1e4aa276e4b7b8e9ad7628050e61e165d49ab995407bc36677a6f3864`
+- Result: **match** against the expected size and digest. `models\ignored\` was not hashed.
+- Status: REQ-E0-03 remains partial because the 18 source shards are still absent; E0 remains open.
+
+## E0-IQ3S-QUALITY-5-20261001 — five-prompt text smoke
+
+- Hypothesis/target: change only `-p` across frozen `text-001` through `text-005` from `quality/prompts/text_50.json`; keep IQ3_S, `-n 128 --seed 7 -c 2048 -ngl 16 -ctk q8_0 -ctv q8_0 --single-turn`. Five independent processes should exit 0 and produce five distinct stdout files. This is not scoring the full 50-prompt suite.
+- Preflight: 0 `llama-cli` processes, RAM used 38.27%. Working directory: `C:\lab\ailocal\runtimes\llama-b11259-cuda124`. Each process used `.\llama-cli.exe -m "C:\lab\ailocal\models\Qwen3.8-27B-UD-IQ3_S.gguf" -p <exact text-00N prompt from quality/prompts/text_50.json> -n 128 --seed 7 -c 2048 -ngl 16 -ctk q8_0 -ctv q8_0 --single-turn`; stdout redirected to its own `experiments/raw/iq3-quality-5/text-00N.txt`, stderr to `text-00N.stderr.txt`. Confirmed no `llama-cli` process remained after each exit.
+- `text-001`: exit 0; `experiments/raw/iq3-quality-5/text-001.txt`; prompt 10.2 tok/s, generation 1.7 tok/s.
+- `text-002`: exit 0; `experiments/raw/iq3-quality-5/text-002.txt`; prompt 11.2 tok/s, generation 1.1 tok/s.
+- `text-003`: exit 0; `experiments/raw/iq3-quality-5/text-003.txt`; prompt 5.4 tok/s, generation 1.0 tok/s.
+- `text-004`: exit 0; `experiments/raw/iq3-quality-5/text-004.txt`; prompt 5.6 tok/s, generation 0.9 tok/s.
+- `text-005`: exit 0; `experiments/raw/iq3-quality-5/text-005.txt`; prompt 5.0 tok/s, generation 0.9 tok/s.
+
+### Status / Numbers / Next Experiment
+- **Status:** Five prompt-only variations completed, with five exit-0 runs and separate stdout/stderr evidence. E0 remains open; REQ-E0-03 remains partial. No 50-prompt score claimed.
+- **Numbers:** 5 stdout files; 5 stderr files; generation 0.9–1.7 tok/s, so the near-1.7 hypothesis was not sustained across prompts; 0 processes remaining after each run.
+- **Next Experiment:** Inspect the five raw outputs and prompt-length/thermal effects before any broader quality scoring; do not start 01-07 or 01-08 or run `text-006` from this slice.
+
+## E0-IQ3S-FA-20261001 — measured flash-attention variation
+
+- Hypothesis/target: with only the help-confirmed flash-attention flag `-fa on` added, generation should exceed 1.8 tok/s and GPU peak remain below 3,900 MiB; one run only.
+- Exact command: `cmd.exe /c '.\llama-cli.exe -m "C:\lab\ailocal\models\Qwen3.8-27B-UD-IQ3_S.gguf" -p "Write three sentences about why the sky is blue." -n 128 --seed 7 -c 2048 -ngl 16 -ctk q8_0 -ctv q8_0 --single-turn -fa on > "C:\lab\ailocal\experiments\raw\iq3-fa\stdout.txt" 2> "C:\lab\ailocal\experiments\raw\iq3-fa\stderr.txt"'`, working directory `C:\lab\ailocal\runtimes\llama-b11259-cuda124`. Help syntax copied: `-fa, --flash-attn [on|off|auto] ... (default: auto)`. Preflight: 0 `llama-cli` processes, 39.23% RAM used, idle GPU 84 MiB. Same 1-second sampler.
+- Result: exit 0, 69 samples. Evidence: `experiments/raw/iq3-fa/stdout.txt`, `stderr.txt`, `sampler.jsonl`; prompt 10.9 tok/s, generation 1.7 tok/s, GPU peak 3,792 MiB, working-set peak 10,142,789,632 bytes.
+
+### Status / Numbers / Next Experiment
+- **Status:** Flash attention `-fa on` measured once; target generation increase was not met (1.7 <= 1.8). GPU peak stayed below 3,900 MiB. Leave flash attention off for the canonical comparison. E0 remains open and REQ-E0-03 remains partial.
+- **Numbers:** prompt 10.9 tok/s; generation 1.7 tok/s; GPU peak 3,792 MiB; working-set peak 10,142,789,632 bytes; delta versus 11.4/1.7 run: prompt -0.5 tok/s; generation 0.0 tok/s; GPU peak 0 MiB; working set +440,864,768 bytes; exit 0; 69 samples.
+- **Next Experiment:** Freeze `-fa` off for the canonical `-ngl 16` comparison; do not start 01-07 or 01-08.
+
+## E0-IQ3S-KV-Q4-20261001 — measured KV-cache variation
+
+- Hypothesis/target: change only both KV cache types from q8_0 to legal `q4_0`; GPU peak should drop at least 100 MiB from 3,792 MiB, generation should remain at least 1.5 tok/s, and the process should exit by itself. One run only.
+- Help confirmation: `-ctk/-ctv` both list `q4_0` as legal. Exact command: `cmd.exe /c '.\llama-cli.exe -m "C:\lab\ailocal\models\Qwen3.8-27B-UD-IQ3_S.gguf" -p "Write three sentences about why the sky is blue." -n 128 --seed 7 -c 2048 -ngl 16 -ctk q4_0 -ctv q4_0 --single-turn > "C:\lab\ailocal\experiments\raw\iq3-kv-q4\stdout.txt" 2> "C:\lab\ailocal\experiments\raw\iq3-kv-q4\stderr.txt"'`. Same 1-second sampler. Preflight: 0 `llama-cli` processes, 36.48% RAM used, idle GPU 80 MiB.
+- Result: exit 0, 67 samples, 0 `llama-cli` processes after exit, GPU after exit 67 MiB. Evidence: `experiments/raw/iq3-kv-q4/stdout.txt`, `stderr.txt`, `sampler.jsonl`; prompt 11.1 tok/s, generation 1.7 tok/s, GPU peak 3,781 MiB, working-set peak 10,653,560,832 bytes.
+
+### Status / Numbers / Next Experiment
+- **Status:** Legal q4_0/q4_0 KV variation measured once. Generation met the minimum, but GPU peak reduction was only 11 MiB, below the 100 MiB target. Keep q8_0 as the canonical KV type. E0 remains open and REQ-E0-03 remains partial.
+- **Numbers:** prompt 11.1 tok/s; generation 1.7 tok/s; GPU peak 3,781 MiB; working-set peak 10,653,560,832 bytes; delta versus 11.4/1.7 run: prompt -0.3 tok/s; generation 0.0 tok/s; GPU peak -11 MiB; working set +951,635,968 bytes; exit 0; 67 samples.
+- **Next Experiment:** Keep q8_0/q8_0 as canonical KV; do not start 01-07 or 01-08.
+
+## E0-IQ3S-NGRAM-SIMPLE-20261001 — measured speculative variation
+
+- Hypothesis/target: add only `--spec-type ngram-simple` to the exact 11.4/1.7 command, using binary-default n-gram sizes; generation should remain at least 1.7 tok/s, with >2.0 tok/s as the success target. One run only.
+- Exact command: `cmd.exe /c '.\llama-cli.exe -m "C:\lab\ailocal\models\Qwen3.8-27B-UD-IQ3_S.gguf" -p "Write three sentences about why the sky is blue." -n 128 --seed 7 -c 2048 -ngl 16 -ctk q8_0 -ctv q8_0 --single-turn --spec-type ngram-simple > "C:\lab\ailocal\experiments\raw\iq3-ngram\stdout.txt" 2> "C:\lab\ailocal\experiments\raw\iq3-ngram\stderr.txt"'`, working directory `C:\lab\ailocal\runtimes\llama-b11259-cuda124`. No `-md` file and no n-gram size flags. Preflight: 0 `llama-cli` processes, 37.48% RAM used, idle GPU 77 MiB. Same 1-second sampler.
+- Result: exit 0, 68 samples, 0 `llama-cli` processes after exit, GPU after exit 68 MiB. Evidence: `experiments/raw/iq3-ngram/stdout.txt`, `stderr.txt`, `sampler.jsonl`; stdout reports prompt 10.7 tok/s and generation 1.7 tok/s. No acceptance or drafted-token count was printed, so none is claimed. GPU peak 3,792 MiB; working-set peak 10,391,375,872 bytes.
+
+### Status / Numbers / Next Experiment
+- **Status:** `--spec-type ngram-simple` measured once; generation met the minimum but did not exceed 2.0 tok/s. GPU peak stayed below 3,900 MiB. Leave n-gram speculation off for the canonical comparison. E0 remains open and REQ-E0-03 remains partial.
+- **Numbers:** prompt 10.7 tok/s; generation 1.7 tok/s; GPU peak 3,792 MiB; working-set peak 10,391,375,872 bytes; delta versus 11.4/1.7 run: prompt -0.7 tok/s; generation 0.0 tok/s; GPU peak 0 MiB; working set +689,451,008 bytes; exit 0; 68 samples.
+- **Next Experiment:** Leave n-gram speculation off; do not start 01-07 or 01-08.
+
+## E0-IQ3S-CLOSED-CONTROLS-20261001 — freeze record
+
+- **Status:** Closed local IQ3_S control variations; the canonical command remains the unchanged `-ngl 16`, `-ctk q8_0 -ctv q8_0`, `--single-turn` run with no `-fa`, no `--spec-type`, and no `-t`/`--threads`. E0 remains open and REQ-E0-03 remains partial.
+- **Canonical bar:** prompt 11.4 tok/s; generation 1.7–1.8 tok/s at context 2048; GPU peak 3,792 MiB in the 11.4/1.7 control.
+- **Closed results:** `-ngl 14` = 5.7 / 0.9; `-ngl 16` = 11.4 / 1.7–1.8; `-ngl 18` = 3.2 / 0.8; `-fa on` = 10.9 / 1.7; `-ctk q4_0 -ctv q4_0` = 11.1 / 1.7 with GPU delta -11 MiB; `--spec-type ngram-simple` = 10.7 / 1.7, acceptance not printed.
+- **Dormant routes:** `draft-simple` until a GGUF under 1,000,000,000 bytes with `vocab_size=248320` exists; thread-count variation until a no-generation command prints `n_threads`; MTP on IQ2_XXS remains blocked.
+- **Next Experiment:** No further local IQ3_S control variation in this slice. Do not start 01-07 or 01-08.
+

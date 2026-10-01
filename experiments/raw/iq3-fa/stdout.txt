@@ -1,0 +1,39 @@
+
+
+Loading model... 
+
+▄▄ ▄▄
+██ ██
+██ ██  ▀▀█▄ ███▄███▄  ▀▀█▄    ▄████ ████▄ ████▄
+██ ██ ▄█▀██ ██ ██ ██ ▄█▀██    ██    ██ ██ ██ ██
+██ ██ ▀█▄██ ██ ██ ██ ▀█▄██ ██ ▀████ ████▀ ████▀
+                                    ██    ██
+                                    ▀▀    ▀▀
+
+build      : b11259-d280808f5
+model      : C:\lab\ailocal\models\Qwen3.8-27B-UD-IQ3_S.gguf
+ftype      : IQ3_S - 3.4375 bpw
+modalities : text
+
+available commands:
+  /exit or Ctrl+C     stop or exit
+  /regen              regenerate the last response
+  /clear              clear the chat history
+  /read <file>        add a text file
+  /glob <pattern>     add text files using globbing pattern
+
+
+
+> Write three sentences about why the sky is blue.
+
+[Start thinking]
+
+We need respond to user: "Write three sentences about why the sky is blue." Simple. Need final exactly three sentences maybe. Ensure three sentences. Could be concise.
+[End thinking]
+
+Sunlight enters Earth's atmosphere and scatters in all directions. The shorter blue wavelengths scatter more strongly than other colors, so they dominate the sky we see. This effect, called Rayleigh scattering, makes the daytime sky appear blue.
+
+[ Prompt: 10.9 t/s | Generation: 1.7 t/s ]
+
+
+Exiting...

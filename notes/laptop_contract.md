@@ -1,0 +1,7 @@
+- Machine: RTX 3050 Laptop, 4096 MiB, sm_86, 16 GiB RAM, CUDA llama-cli b11259.
+- Canonical command: IQ3_S, -ngl 16, -ctk q8_0 -ctv q8_0, --single-turn, no -fa, no --spec-type, no -t.
+- Canonical bar: 11.4 prompt tok/s, 1.7-1.8 generation tok/s, GPU peak 3792 MiB.
+- Closed on this laptop: ngl 14, ngl 18, -fa on, q4_0 KV, ngram-simple.
+- Dormant: draft-simple until a GGUF under 1000000000 bytes has vocab_size 248320. Threads until a no-generation command prints n_threads. IQ2_XXS MTP stays blocked.
+- E0 remains open. REQ-E0-03 remains partial. Opus 4.8 quality is unmeasured.
+- No further IQ3_S control variation on this laptop.
